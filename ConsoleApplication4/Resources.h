@@ -7,9 +7,10 @@ public:
     int numberOfSettlements = 1;
     sf::Font font;
     sf::Texture backgroundTexture;
+    sf::Texture simTexture;
+
     Resources();
     void configPanel();
-    void backgroundSim();
     sf::Sprite backgroundMainMenu;
     sf::Sprite backgroundSimulation;
     Button menuButton;

@@ -52,7 +52,6 @@
                                 std::cout << "Wybrano ilość osad: " << options[i];
                           //tutaj dodac moze jakies podswietlenie na razie to dziala jako tako mozna przejsc do nastepnej rozgrywki
                                 m_state = GameState::SIMULATION;
-                                m_resources.backgroundSim();
                                 return;
                             }
                         }

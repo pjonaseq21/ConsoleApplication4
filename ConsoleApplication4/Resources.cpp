@@ -4,7 +4,7 @@
 
 //klasa odpowiedzialna za przyciski załadowanie tła...
 //na ten moment tutaj tworze przyciski
-Resources::Resources() :menuButton(font, "Nowa Gra", { 750.f, 580.f }, { 200.f, 50.f }), backgroundMainMenu(backgroundTexture), backgroundSimulation(backgroundTexture) {
+Resources::Resources() :menuButton(font, "Nowa Gra", { 750.f, 580.f }, { 200.f, 50.f }), backgroundMainMenu(backgroundTexture), backgroundSimulation(simTexture) {
 
 
     if (!backgroundTexture.loadFromFile("assets/background.jpg")) {
@@ -14,14 +14,16 @@ Resources::Resources() :menuButton(font, "Nowa Gra", { 750.f, 580.f }, { 200.f, 
         backgroundMainMenu.setTexture(backgroundTexture, true); //tło
 
     }
-}
-
-void Resources::backgroundSim() {
-    if (!backgroundTexture.loadFromFile("assets/Simulation_background.jpg")) {
+    if (!simTexture.loadFromFile("assets/Simulation_background.jpg")) {
         std::cerr << "BLAD: Nie udalo sie zaladowac tekstury!" << std::endl;
     }
+    else {
+        backgroundSimulation.setTexture(simTexture, true); //tło
 
+    }
 }
+
+
 
 void Resources::configPanel()
 {
