@@ -1,6 +1,7 @@
 ﻿#pragma once 
 #include <SFML/Graphics.hpp>
 #include "Resources.h"
+#include "Throngle.h"
 enum class GameState {
     MENU,
     SIMULATION,
@@ -15,10 +16,12 @@ public:
 
 private:
     void processEvents(); 
-    void update();       
+    void update(sf::Time dt);       
     void render();   
     GameState m_state;
     Resources m_resources;
     sf::RenderWindow window;
+    Throngle throngle;
+    float m_timer;
     
 };

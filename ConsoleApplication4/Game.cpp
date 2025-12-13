@@ -9,9 +9,11 @@
     }
 
     void Game::run() {
+        sf::Clock clock; 
         while (window.isOpen()) {
+            sf::Time dt = clock.restart();
             processEvents();
-            update();
+            update(dt);
             render();
         }
     }
@@ -65,7 +67,21 @@
         }
     }
 
-    void Game::update() {
+    void Game::update(sf::Time dt) {
+
+        std::cout << "test";
+        if (m_state == GameState::SIMULATION) {
+                m_timer += dt.asSeconds();
+                std::cout << dt.asSeconds()<< " czas od ostatniej pętli";
+                if (m_timer > 0.5f) {
+                    throngle.move(22, 23);
+                    m_timer = 0.0f;
+                }
+         
+      
+        }
+
+
     }
 
     void Game::render() {
@@ -85,7 +101,8 @@
         
         else if (m_state == GameState::SIMULATION) {
             window.draw(m_resources.backgroundSimulation);
-       
+            throngle.render(window);
+            std::cout << "Tu powinno byc wyrenderowany thrngole ";
         }
         window.display();
     }
