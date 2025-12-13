@@ -1,6 +1,8 @@
 #include <string>
 #include "Button.h"
 
+
+
 Button::Button(sf::Font& font, std::string text, sf::Vector2f position, sf::Vector2f size):buttonText(font) {
 	if (!font.openFromFile("assets/ARIAL.ttf")) std::exit(1);
 
@@ -24,11 +26,13 @@ Button::Button(sf::Font& font, std::string text, sf::Vector2f position, sf::Vect
 		});
 
 	buttonText.setPosition({
-		button.getPosition().x + button.getSize().x / 4.0f,
-		button.getPosition().y + button.getSize().y / 2.0f
+		button.getPosition().x + button.getSize().x / 2.2f,
+		button.getPosition().y + button.getSize().y / 2.5f
 		});
 
 }
+
+
 
 void Button::render(sf::RenderWindow& window) {
 	window.draw(button);
@@ -38,7 +42,9 @@ void Button::render(sf::RenderWindow& window) {
 bool Button::isClicked(sf::Vector2f mousepos) {
 	
 	if (button.getGlobalBounds().contains(mousepos)) {
-		std::cout << "KLIKNIETO NOWA GRA!" << std::endl;
 		return true;
+	}
+	else {
+		return false;
 	}
 }
