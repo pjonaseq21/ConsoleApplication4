@@ -14,12 +14,17 @@ public:
 	sf::Vector2f getPosition()const;
 	sf::FloatRect getBounds();
 	void eat();
+	float getHunger()const { return m_hunger; }// ciekawy sposob na zapisanie gettera
+	void wasEatenFunc();
 private:
 	sf::RectangleShape texture;
 	float m_hunger;
 	float m_changeDirectionTimer = 0.0f;
 	float m_speed= 20.0f;
 	sf::Vector2f m_velocity;
+	void grow();
+	bool wasEatenThrongle = false;
+
 
 
 };

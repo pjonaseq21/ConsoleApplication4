@@ -84,14 +84,8 @@
                         m_timer = 0.0f;
                     }
                     for (auto& throngle : throngles) {
-                        for (auto it = apples.begin(); it != apples.end();) { 
-                            if (throngle.getBounds().findIntersection(it->getBounds()))
-                            {
-                                it = apples.erase(it); //zwraca iterator do nastepnego elementu
-                                throngle.eat();
-                            }
-                            else it++;
-                        }
+                        handleAppleEating();
+                        handleDeadThrongles();
                         throngle.update(dtSeconds);
                         if (logicTic) {
 
@@ -151,3 +145,43 @@
         }
     
     }
+    void Game::handleAppleEating() {
+        for (auto it = apples.begin(); it != apples.end();) {
+            bool wasEaten = false;
+            for (auto& throngle : throngles) {
+                if (throngle.getBounds().findIntersection(it->getBounds()))
+                {
+                    it = apples.erase(it); //zwraca iterator do nastepnego elementu
+                    wasEaten = true;
+                    throngle.eat();
+                    throngle.wasEatenFunc();
+                    break;
+                }
+               
+
+               
+            }
+            if (!wasEaten) {
+                it++;
+            }
+        }
+    }
+    void Game::handleDeadThrongles() {
+        for (auto it = throngles.begin(); it != throngles.end();) {
+            bool starvingThrongle = false;
+                if (it->getHunger() <-0.05)
+                {
+                    it = throngles.erase(it); //zwraca iterator do nastepnego elementu
+                    starvingThrongle = true;
+                    break;
+                }
+
+                if (!starvingThrongle) {
+                    it++;
+                }
+
+            
+            
+        }
+    }
+

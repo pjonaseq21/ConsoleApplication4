@@ -27,5 +27,7 @@ private:
     float m_timer;
     std::vector<Apple> apples;
     void spawnApples();
+    void handleAppleEating();
+    void handleDeadThrongles();
 
 };

@@ -11,10 +11,19 @@ void Throngle::render(sf::RenderWindow& window)
 	window.draw(texture);
 
 }
+//zmienic nazwe funkcji bo nie oznacza tego nawet, to ma zwiekszac glod
 void Throngle::hungerDecrease() {
-	m_hunger -= 0.01;
-	m_speed += 0.6;
-}
+	if (wasEatenThrongle) {
+		sf::Vector2f currSize = texture.getSize();
+		currSize.x = currSize.x * 0.999;
+		currSize.y = currSize.y * 0.999;
+		texture.setSize(currSize);
+	}
+	else {
+		m_hunger -= 0.01;
+		m_speed += 1.5;
+	}
+	}
 void Throngle::move(float moveToX, float moveToY) {
 	
 	sf::Vector2f currentPosition = texture.getPosition();
@@ -23,6 +32,9 @@ void Throngle::move(float moveToX, float moveToY) {
 	texture.setPosition(currentPosition);
 }
 
+void Throngle::wasEatenFunc() {
+	wasEatenThrongle = true;
+}
 
 bool Throngle::reproduction() {
 	std::cout << m_hunger<<" glod   \n ";
@@ -35,6 +47,14 @@ bool Throngle::reproduction() {
 }
 void Throngle::eat() {
 	m_hunger += 0.5;
+	grow();
+
+}
+void Throngle::grow() {
+	sf::Vector2f currSize =texture.getSize();
+	currSize.x += 15;
+	currSize.y += 10;
+	texture.setSize(currSize);
 }
 
 sf::FloatRect Throngle::getBounds() {
