@@ -1,6 +1,7 @@
 ﻿#include "Resources.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <random>
 
 //klasa odpowiedzialna za przyciski załadowanie tła...
 //na ten moment tutaj tworze przyciski
@@ -24,6 +25,14 @@ Resources::Resources() :menuButton(font, "Nowa Gra", { 750.f, 580.f }, { 200.f, 
 }
 
 
+
+float Resources::randomNumber(float x1,float x2) {
+
+    std::random_device rd;
+    static std::mt19937 mt(rd());
+    std::uniform_int_distribution<int> dist(x1, x2);
+    return dist(mt);
+}
 
 void Resources::configPanel()
 {

@@ -10,6 +10,7 @@
         window.setFramerateLimit(60);
         m_state = GameState::MENU;
         throngles.emplace_back(); //stworzenie pierwszego stworka
+        apples.emplace_back(); //stworzenie pierwszego jablka
     }
 
     void Game::run() {
@@ -60,10 +61,10 @@
                             }
                         }
                     }
-                    else if (m_state == GameState::SIMULATION) {
+                  //  else if (m_state == GameState::SIMULATION) {
                     //kod
-                        std::cout << "znalezlismy sie tutaj";
-                    }
+                    //    std::cout << "znalezlismy sie tutaj";
+                   // }
                 }
             }
         }
@@ -72,27 +73,42 @@
     void Game::update(sf::Time dt) {
         
         if (m_state == GameState::SIMULATION) 
-        {
-                    m_timer += dt.asSeconds();
+        {           
+                    float dtSeconds = dt.asSeconds();
+                    m_timer += dtSeconds;
                     std::vector<Throngle> newBabies;
+                    bool logicTic = false;
 
-
-                    for (auto& throngle : throngles) {
-                        throngle.update(m_timer);
                     if (m_timer > 0.5f) {
-
-                   if (throngle.reproduction() == true)
-                    {
-                        newBabies.emplace_back();
+                        logicTic = true;
+                        m_timer = 0.0f;
                     }
+                    for (auto& throngle : throngles) {
+                        for (auto it = apples.begin(); it != apples.end();) { 
+                            if (throngle.getBounds().findIntersection(it->getBounds()))
+                            {
+                                it = apples.erase(it); //zwraca iterator do nastepnego elementu
+                                throngle.eat();
+                            }
+                            else it++;
+                        }
+                        throngle.update(dtSeconds);
+                        if (logicTic) {
+
+                        if (throngle.reproduction() == true)
+                            {
+                                newBabies.emplace_back();
+                            }
                     
-                    throngle.hungerDecrease();
-                    }
+                        throngle.hungerDecrease();
+                        }
 
+                    
+                    }
+         
                     for (const auto& baby : newBabies) {
                         throngles.push_back(baby);
-                       // std::cout << throngles.size() << "  ilosc chmary"<<'\n';
-                    }
+                        std::cout << throngles.size() << "  ilosc chmary" << '\n';
                     }
         }
 
@@ -116,9 +132,22 @@
         
         else if (m_state == GameState::SIMULATION) {
             window.draw(m_resources.backgroundSimulation);
+            spawnApples();
+
             for (auto& throngle : throngles) {
                 throngle.render(window);
             }
+            for (auto& apple : apples) {
+                apple.render(window);
+            }
         }
         window.display();
+    }
+
+
+    void Game::spawnApples() {
+        while (apples.size() <80) {
+            apples.emplace_back();
+        }
+    
     }

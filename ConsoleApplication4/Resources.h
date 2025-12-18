@@ -15,5 +15,7 @@ public:
     sf::Sprite backgroundSimulation;
     Button menuButton;
     std::vector<Button*> configButtons;
+    static float randomNumber(float x1, float x2);
+
 };
 

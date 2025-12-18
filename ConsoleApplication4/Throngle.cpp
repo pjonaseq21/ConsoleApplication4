@@ -1,6 +1,7 @@
 #include "Throngle.h"
 #include <iostream>
-Throngle::Throngle(sf::Vector2f position, sf::Vector2f size) {
+Throngle::Throngle(sf::Vector2f position, sf::Vector2f size, float startHunger) {
+	m_hunger = startHunger;
 	texture.setFillColor(sf::Color(255, 234, 0));
 	texture.setSize(size);
 	texture.setPosition(position);
@@ -11,7 +12,7 @@ void Throngle::render(sf::RenderWindow& window)
 
 }
 void Throngle::hungerDecrease() {
-	m_hunger -= 0.1;
+	m_hunger -= 0.01;
 	m_speed += 0.6;
 }
 void Throngle::move(float moveToX, float moveToY) {
@@ -24,23 +25,24 @@ void Throngle::move(float moveToX, float moveToY) {
 
 
 bool Throngle::reproduction() {
-	if (m_hunger >= 0.9)
+	std::cout << m_hunger<<" glod   \n ";
+	if (m_hunger >= 0.4f)
 	{
-		newBorn = true;
+		m_hunger = 0.2f;
 		return true;
 	}
 	return false;
 }
-
-int Throngle::randomNumber() {
-
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_int_distribution<int> dist(-10, 10);
-	return dist(mt);
+void Throngle::eat() {
+	m_hunger += 0.5;
 }
+
+sf::FloatRect Throngle::getBounds() {
+	return texture.getGlobalBounds();
+}
+
 void Throngle::update(float dt) {
-	int random = randomNumber();
+	int random = Resources::randomNumber(-10,10);
 	m_changeDirectionTimer -= dt;
 
 	if (m_changeDirectionTimer <= -1) {

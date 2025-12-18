@@ -30,6 +30,9 @@
     <ClCompile Include="Throngle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Apple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="D:\folderzplikamidoc++\background.jpg">
@@ -47,6 +50,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Throngle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Apple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
