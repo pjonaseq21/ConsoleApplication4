@@ -1,6 +1,7 @@
 ﻿#pragma once 
 #include <SFML/Graphics.hpp>
 #include "Resources.h"
+#include <vector>
 #include "Throngle.h"
 enum class GameState {
     MENU,
@@ -21,7 +22,7 @@ private:
     GameState m_state;
     Resources m_resources;
     sf::RenderWindow window;
-    Throngle throngle;
+    std::vector<Throngle> throngles;
     float m_timer;
-    
+
 };

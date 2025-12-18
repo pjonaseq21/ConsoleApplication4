@@ -1,11 +1,15 @@
-﻿    #include "Game.h"
-    #include "Resources.h"
-    #include <iostream>
-    #include <SFML/Graphics.hpp>
+﻿#include "Game.h"
+#include "Resources.h"
+#include <iostream>
+#include <SFML/Graphics.hpp>
+
+
+
     Game::Game() {
         window.create(sf::VideoMode({ 1600, 900 }), "Chmara");
         window.setFramerateLimit(60);
         m_state = GameState::MENU;
+        throngles.emplace_back(); //stworzenie pierwszego stworka
     }
 
     void Game::run() {
@@ -49,7 +53,7 @@
                             if (m_resources.configButtons[i]->isClicked(mousePos)) {
 
                                 m_resources.numberOfSettlements = options[i];
-                                std::cout << "Wybrano ilość osad: " << options[i];
+                                std::cout << "Wybrano ilość osad: ";
                           //tutaj dodac moze jakies podswietlenie na razie to dziala jako tako mozna przejsc do nastepnej rozgrywki
                                 m_state = GameState::SIMULATION;
                                 return;
@@ -66,14 +70,31 @@
     }
 
     void Game::update(sf::Time dt) {
+        
+        if (m_state == GameState::SIMULATION) 
+        {
+                    m_timer += dt.asSeconds();
+                    std::vector<Throngle> newBabies;
 
-        std::cout << "test";
-        if (m_state == GameState::SIMULATION) {
-                m_timer += dt.asSeconds();
-                if (m_timer > 0.5f) {
-                    throngle.move(22, 23);
+
+                    for (auto& throngle : throngles) {
+                        throngle.update(m_timer);
+                    if (m_timer > 0.5f) {
+
+                   if (throngle.reproduction() == true)
+                    {
+                        newBabies.emplace_back();
+                    }
+                    
+                    throngle.hungerDecrease();
+                    }
+
+                    for (const auto& baby : newBabies) {
+                        throngles.push_back(baby);
+                       // std::cout << throngles.size() << "  ilosc chmary"<<'\n';
+                    }
                     m_timer = 0.0f;
-                }
+                    }
          
       
         }
@@ -98,7 +119,9 @@
         
         else if (m_state == GameState::SIMULATION) {
             window.draw(m_resources.backgroundSimulation);
-            throngle.render(window);
+            for (auto& throngle : throngles) {
+                throngle.render(window);
+            }
         }
         window.display();
     }
