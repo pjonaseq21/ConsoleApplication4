@@ -4,7 +4,6 @@ Throngle::Throngle(sf::Vector2f position, sf::Vector2f size) {
 	texture.setFillColor(sf::Color(255, 234, 0));
 	texture.setSize(size);
 	texture.setPosition(position);
-	newBornReproduction();
 }
 void Throngle::render(sf::RenderWindow& window)
 {
@@ -32,14 +31,8 @@ bool Throngle::reproduction() {
 	}
 	return false;
 }
-void Throngle::newBornReproduction() {
-	if (newBorn == true) {
-		m_hunger = 0.7;
-	}
-}
 
 int Throngle::randomNumber() {
-	sf::Clock clock;
 
 	std::random_device rd;
 	std::mt19937 mt(rd());

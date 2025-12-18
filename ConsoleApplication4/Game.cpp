@@ -93,10 +93,7 @@
                         throngles.push_back(baby);
                        // std::cout << throngles.size() << "  ilosc chmary"<<'\n';
                     }
-                    m_timer = 0.0f;
                     }
-         
-      
         }
 
 
