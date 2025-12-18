@@ -1,4 +1,3 @@
-#pragma once
 #include "Throngle.h"
 #include <iostream>
 Throngle::Throngle(sf::Vector2f position, sf::Vector2f size) {

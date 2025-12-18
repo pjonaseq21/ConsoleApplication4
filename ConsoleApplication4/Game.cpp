@@ -47,8 +47,6 @@
                         // std::cout << "Jestem w Stanie config";
                         for (size_t i = 0; i < m_resources.configButtons.size(); i++) {
                             if (m_resources.configButtons[i]->isClicked(mousePos)) {
-                                std::cout << m_resources.configButtons[i];
-                                std::cout << "Wykrylem klikniecie w stanie config";
 
                                 m_resources.numberOfSettlements = options[i];
                                 std::cout << "Wybrano ilość osad: " << options[i];
@@ -72,7 +70,6 @@
         std::cout << "test";
         if (m_state == GameState::SIMULATION) {
                 m_timer += dt.asSeconds();
-                std::cout << dt.asSeconds()<< " czas od ostatniej pętli";
                 if (m_timer > 0.5f) {
                     throngle.move(22, 23);
                     m_timer = 0.0f;
@@ -102,7 +99,6 @@
         else if (m_state == GameState::SIMULATION) {
             window.draw(m_resources.backgroundSimulation);
             throngle.render(window);
-            std::cout << "Tu powinno byc wyrenderowany thrngole ";
         }
         window.display();
     }
