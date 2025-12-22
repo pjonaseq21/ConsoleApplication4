@@ -4,7 +4,7 @@
 class Apple
 {
 public:
-	Apple(sf::Vector2f size = { 40.f, 40.f });
+	Apple(sf::Vector2f startPosition,sf::Vector2f size = { 50.f, 50.f });
 	void render(sf::RenderWindow& window);
 	sf::Vector2f getPosition()const;
 	sf::FloatRect getBounds();

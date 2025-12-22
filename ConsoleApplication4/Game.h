@@ -4,6 +4,7 @@
 #include <vector>
 #include "Apple.h"
 #include "Throngle.h"
+#include "Ground.h"
 enum class GameState {
     MENU,
     SIMULATION,
@@ -17,6 +18,7 @@ public:
     void run(); 
 
 private:
+    Ground m_ground;
     void processEvents(); 
     void update(sf::Time dt);       
     void render();   

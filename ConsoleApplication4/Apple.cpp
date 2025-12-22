@@ -1,12 +1,12 @@
 #include "Apple.h"
 #include "Resources.h"
-Apple::Apple(sf::Vector2f size) {
+#include "Ground.h"
+Apple::Apple(sf::Vector2f startPosition, sf::Vector2f size ) {
 	texture.setFillColor(sf::Color(220, 20, 60));
 	texture.setSize(size);
-	float randomForApplex = Resources::randomNumber(-1000, 1000);
-	float randomForAppley = Resources::randomNumber(-1000, 1000);
+	
 
-	texture.setPosition({randomForApplex,randomForAppley });
+	texture.setPosition(startPosition);
 }
 void Apple::render(sf::RenderWindow& window) {
 	window.draw(texture);
@@ -15,4 +15,7 @@ void Apple::render(sf::RenderWindow& window) {
 
 sf::FloatRect Apple::getBounds() {
 	return texture.getGlobalBounds();
+}
+sf::Vector2f Apple::getPosition()const {
+	return texture.getPosition();
 }

@@ -33,10 +33,19 @@
     <ClCompile Include="Apple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="D:\folderzplikamidoc++\background.jpg">
       <Filter>Source Files</Filter>
+    </Image>
+    <Image Include="assets\Simulation_background.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\background.jpg">
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -55,5 +64,11 @@
     <ClInclude Include="Apple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\ARIAL.TTF" />
   </ItemGroup>
 </Project>

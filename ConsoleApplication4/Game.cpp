@@ -10,7 +10,8 @@
         window.setFramerateLimit(60);
         m_state = GameState::MENU;
         throngles.emplace_back(); //stworzenie pierwszego stworka
-        apples.emplace_back(); //stworzenie pierwszego jablka
+        apples.emplace_back(m_ground.returnFreeTile()); //stworzenie pierwszego jablka
+        
     }
 
     void Game::run() {
@@ -78,15 +79,19 @@
                     m_timer += dtSeconds;
                     std::vector<Throngle> newBabies;
                     bool logicTic = false;
-
+                    float groundCooldown = 0.0f;
+                    m_ground.update(dtSeconds);
                     if (m_timer > 0.5f) {
                         logicTic = true;
                         m_timer = 0.0f;
                     }
+                    spawnApples();
+                    handleAppleEating();
+                    handleDeadThrongles();
                     for (auto& throngle : throngles) {
-                        handleAppleEating();
-                        handleDeadThrongles();
+                        
                         throngle.update(dtSeconds);
+                        
                         if (logicTic) {
 
                         if (throngle.reproduction() == true)
@@ -96,6 +101,7 @@
                     
                         throngle.hungerDecrease();
                         }
+                        
 
                     
                     }
@@ -127,7 +133,7 @@
         else if (m_state == GameState::SIMULATION) {
             window.draw(m_resources.backgroundSimulation);
             spawnApples();
-
+            m_ground.render(window);
             for (auto& throngle : throngles) {
                 throngle.render(window);
             }
@@ -140,8 +146,9 @@
 
 
     void Game::spawnApples() {
-        while (apples.size() <80) {
-            apples.emplace_back();
+       while (apples.size() <80) {
+            apples.emplace_back(m_ground.returnFreeTile());
+           
         }
     
     }
@@ -151,6 +158,8 @@
             for (auto& throngle : throngles) {
                 if (throngle.getBounds().findIntersection(it->getBounds()))
                 {
+                    sf::Vector2f eatenPosition = it->getPosition();
+                    m_ground.ReleasePosition(eatenPosition);
                     it = apples.erase(it); //zwraca iterator do nastepnego elementu
                     wasEaten = true;
                     throngle.eat();
