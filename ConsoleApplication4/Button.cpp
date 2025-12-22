@@ -4,7 +4,7 @@
 
 
 Button::Button(sf::Font& font, std::string text, sf::Vector2f position, sf::Vector2f size):buttonText(font) {
-	if (!font.openFromFile("assets/ARIAL.ttf")) std::exit(1);
+	if (!font.openFromFile("assets/ARIAL.TTF")) std::exit(1);
 
 	button.setSize(size);
 	button.setPosition(position);
