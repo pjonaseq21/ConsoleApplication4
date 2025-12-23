@@ -5,7 +5,7 @@
 
 //klasa odpowiedzialna za przyciski załadowanie tła...
 //na ten moment tutaj tworze przyciski
-Resources::Resources() :menuButton(font, "Nowa Gra", { 750.f, 580.f }, { 200.f, 50.f }), backgroundMainMenu(backgroundTexture), backgroundSimulation(simTexture) {
+Resources::Resources(sf::Font& font) :sharedFont(font), menuButton(font, "Nowa Gra", {750.f, 580.f}, {200.f, 50.f}), backgroundMainMenu(backgroundTexture), backgroundSimulation(simTexture) {
 
 
     if (!backgroundTexture.loadFromFile("assets/background.jpg")) {
@@ -51,7 +51,7 @@ void Resources::configPanel()
             label = std::to_string(optionValue) + " osada";
         }
 
-        Button* newBtn = new Button(font, label, { startX, 580.f }, { 100.f, 50.f });
+        Button* newBtn = new Button(sharedFont, label, { startX, 580.f }, { 100.f, 50.f });
         configButtons.push_back(newBtn);
         startX -= 200;
     }

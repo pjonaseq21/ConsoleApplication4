@@ -18,6 +18,7 @@ public:
     void run(); 
 
 private:
+    sf::Font m_globalfont;
     Ground m_ground;
     void processEvents(); 
     void update(sf::Time dt);       

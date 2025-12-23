@@ -5,7 +5,10 @@
 
 
 
-    Game::Game() {
+    Game::Game():m_resources(m_globalfont) {
+        if (!m_globalfont.openFromFile("assets/ARIAL.ttf")) {
+            std::exit(1);
+        }
         window.create(sf::VideoMode({ 1600, 900 }), "Chmara");
         window.setFramerateLimit(60);
         m_state = GameState::MENU;

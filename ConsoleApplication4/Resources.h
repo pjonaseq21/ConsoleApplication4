@@ -3,13 +3,15 @@
 #include "Button.h"
 class Resources
 {
+private:
+    sf::Font& sharedFont;
 public:
     int numberOfSettlements = 1;
-    sf::Font font;
+
     sf::Texture backgroundTexture;
     sf::Texture simTexture;
 
-    Resources();
+    Resources(sf::Font& font);
     void configPanel();
     sf::Sprite backgroundMainMenu;
     sf::Sprite backgroundSimulation;
