@@ -6,7 +6,6 @@ class Resources
 private:
     sf::Font& sharedFont;
 public:
-    int numberOfSettlements = 1;
 
     sf::Texture backgroundTexture;
     sf::Texture simTexture;

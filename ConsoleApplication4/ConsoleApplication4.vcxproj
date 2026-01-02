@@ -134,6 +134,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="ConsoleApplication4.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="gameSettings.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Throngle.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Apple.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="gameSettings.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Throngle.h" />

@@ -5,6 +5,7 @@
 #include "Apple.h"
 #include "Throngle.h"
 #include "Ground.h"
+#include "gameSettings.h"
 enum class GameState {
     MENU,
     SIMULATION,
@@ -20,6 +21,7 @@ public:
 private:
     sf::Font m_globalfont;
     Ground m_ground;
+    gameConfig world_config;
     void processEvents(); 
     void update(sf::Time dt);       
     void render();   
@@ -27,6 +29,7 @@ private:
     Resources m_resources;
     sf::RenderWindow window;
     std::vector<Throngle> throngles;
+    void spawnThrongles(bool logicTic, float dtSeconds, std::vector<Throngle>& newBabies);
     float m_timer;
     std::vector<Apple> apples;
     void spawnApples();

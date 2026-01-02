@@ -12,7 +12,6 @@
         window.create(sf::VideoMode({ 1600, 900 }), "Chmara");
         window.setFramerateLimit(60);
         m_state = GameState::MENU;
-        throngles.emplace_back(); //stworzenie pierwszego stworka
         apples.emplace_back(m_ground.returnFreeTile()); //stworzenie pierwszego jablka
         
     }
@@ -51,13 +50,22 @@
 
                     else if (m_state == GameState::CONFIG)
                     {
-                        std::vector<int> options = { 1,2,3 };
+                        std::vector<int> options = { 1,2 };
 
                         // std::cout << "Jestem w Stanie config";
                         for (size_t i = 0; i < m_resources.configButtons.size(); i++) {
                             if (m_resources.configButtons[i]->isClicked(mousePos)) {
-
-                                m_resources.numberOfSettlements = options[i];
+                                if (options[i] == 2) {
+                                    world_config.mode = gameMode::twoVillages;
+                                    std::cout << " wybrano dwie wioski";
+                                    throngles.emplace_back(0);
+                                    throngles.emplace_back(1);
+                                }
+                                else {
+                                    throngles.emplace_back();
+                                }
+                                
+                               
                                 std::cout << "Wybrano ilość osad: ";
                           //tutaj dodac moze jakies podswietlenie na razie to dziala jako tako mozna przejsc do nastepnej rozgrywki
                                 m_state = GameState::SIMULATION;
@@ -91,24 +99,7 @@
                     spawnApples();
                     handleAppleEating();
                     handleDeadThrongles();
-                    for (auto& throngle : throngles) {
-                        
-                        throngle.update(dtSeconds);
-                        
-                        if (logicTic) {
-
-                        if (throngle.reproduction() == true)
-                            {
-                                newBabies.emplace_back();
-                            }
-                    
-                        throngle.hungerDecrease();
-                        }
-                        
-
-                    
-                    }
-         
+                    spawnThrongles(logicTic,dtSeconds,newBabies);
                     for (const auto& baby : newBabies) {
                         throngles.push_back(baby);
                         std::cout << throngles.size() << "  ilosc chmary" << '\n';
@@ -196,4 +187,43 @@
             
         }
     }
+    void Game::spawnThrongles(bool logicTic,float dtSeconds,std::vector<Throngle>&newBabies) {
+        if (world_config.mode == gameMode::oneVillage) {
+            for (auto& throngle : throngles) {
 
+                throngle.update(dtSeconds);
+
+                if (logicTic) {
+
+                    if (throngle.reproduction() == true)
+                    {
+                        newBabies.emplace_back();
+                    }
+
+                    throngle.hungerDecrease();
+                }
+
+
+
+            }
+
+          
+        }
+        else {
+            for (auto& throngle : throngles) {
+
+                throngle.update(dtSeconds);
+
+                if (logicTic) {
+
+                    if (throngle.reproduction() == true)
+                    {
+                        newBabies.emplace_back(throngle.familyIdGet());
+                    }
+
+                    throngle.hungerDecrease();
+                }
+
+            }
+        }
+    }

@@ -1,10 +1,24 @@
 #include "Throngle.h"
 #include <iostream>
+Throngle::Throngle(int familyId,sf::Vector2f size, float startHunger) {
+	m_hunger = startHunger;
+	this->familyId = familyId;
+	if (familyId == 0) {
+		texture.setFillColor(sf::Color(255, 234, 0));
+	}
+	else {
+		texture.setFillColor(sf::Color::Red);
+	}
+	texture.setSize(size);
+	texture.setPosition(throngleTerritoryPosition(familyId));
+
+}
 Throngle::Throngle(sf::Vector2f position, sf::Vector2f size, float startHunger) {
 	m_hunger = startHunger;
 	texture.setFillColor(sf::Color(255, 234, 0));
 	texture.setSize(size);
 	texture.setPosition(position);
+
 }
 void Throngle::render(sf::RenderWindow& window)
 {
@@ -72,4 +86,18 @@ void Throngle::update(float dt) {
 		m_changeDirectionTimer = 1.0f + ((rand() % 200) / 100.0f);
 	}
 	this->move(m_velocity.x * m_speed * dt, m_velocity.y * m_speed * dt);
+}
+sf::Vector2f Throngle::throngleTerritoryPosition(int familyId) {
+	switch (familyId) {
+	case 0:  {
+		float randomPositionFamilyx = Resources::randomNumber(0, 800);
+		float randomPositionFamilyy = Resources::randomNumber(0, 450);
+		return { randomPositionFamilyx,randomPositionFamilyy };
+	}
+	case 1: {
+		float randomPositionFamilyx = Resources::randomNumber(800, 1600);
+		float randomPositionFamilyy = Resources::randomNumber(450, 900);
+		return { randomPositionFamilyx,randomPositionFamilyy };
+	}
+	}
 }

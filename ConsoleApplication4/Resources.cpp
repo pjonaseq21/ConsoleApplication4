@@ -41,7 +41,7 @@ void Resources::configPanel()
     for (auto btn: configButtons) {
         delete btn;
     }
-    std::vector<int> options = { 1,2,3 };
+    std::vector<int> options = { 1, 2};
     std::string label;
     for (int optionValue : options) {
         if (optionValue > 1) {
