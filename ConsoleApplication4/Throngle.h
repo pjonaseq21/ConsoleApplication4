@@ -11,21 +11,21 @@ public:
 		Replicate,
 	};
 	Throngle(int familyId, sf::Vector2f size = { 20.f, 70.f }, float startHunger = 0.3f);
-	Throngle(sf::Vector2f position = { 750.f, 580.f }, sf::Vector2f size = { 20.f, 70.f }, float startHunger = 0.3f);
 	void render(sf::RenderWindow& window);
 	void move(float moveToX, float moveToY);
 	void hungerDecrease();
 	bool reproduction();
-	void update(float dt);
+	void update(float dt, bool canFight);
 	sf::Vector2f getPosition()const;
 	sf::FloatRect getBounds();
 	void eat();
 	float getHunger()const { return m_hunger; }// ciekawy sposob na zapisanie gettera
 	void wasEatenFunc();
 	int familyIdGet()const { return familyId; }
-	State getState()const { return m_state; }
+	bool getStateFight()const;
 private:
 	sf::Vector2f territory;
+	bool checkifEnemyPosition(int familyId);
 	int familyId;
 	State m_state;
 	sf::RectangleShape texture;

@@ -55,6 +55,7 @@
                         // std::cout << "Jestem w Stanie config";
                         for (size_t i = 0; i < m_resources.configButtons.size(); i++) {
                             if (m_resources.configButtons[i]->isClicked(mousePos)) {
+                                
                                 if (options[i] == 2) {
                                     world_config.mode = gameMode::twoVillages;
                                     std::cout << " wybrano dwie wioski";
@@ -62,7 +63,7 @@
                                     throngles.emplace_back(1);
                                 }
                                 else {
-                                    throngles.emplace_back();
+                                    throngles.emplace_back(0);
                                 }
                                 
                                
@@ -88,6 +89,10 @@
         {           
                     float dtSeconds = dt.asSeconds();
                     m_timer += dtSeconds;
+                    
+                    totalSimTime += dtSeconds;
+                   
+
                     std::vector<Throngle> newBabies;
                     bool logicTic = false;
                     float groundCooldown = 0.0f;
@@ -96,7 +101,7 @@
                         logicTic = true;
                         m_timer = 0.0f;
                     }
-                    spawnApples();
+                    spawnApples(totalSimTime);
                     handleAppleEating();
                     handleDeadThrongles();
                     spawnThrongles(logicTic,dtSeconds,newBabies);
@@ -126,7 +131,7 @@
         
         else if (m_state == GameState::SIMULATION) {
             window.draw(m_resources.backgroundSimulation);
-            spawnApples();
+            
             m_ground.render(window);
             for (auto& throngle : throngles) {
                 throngle.render(window);
@@ -139,18 +144,24 @@
     }
 
 
-    void Game::spawnApples() {
-       while (apples.size() <80) {
-            apples.emplace_back(m_ground.returnFreeTile());
-           
-        }
+    void Game::spawnApples(float totalSimTime) {
+       
+       if (apples.size() < 60- totalSimTime) {
+           for (int i = 0; i < Resources::randomNumber(0, 5); i++) {
+               apples.emplace_back(m_ground.returnFreeTile());
+           }
+       }
+       if (apples.size() < 40 && world_config.mode== gameMode::twoVillages && totalSimTime >12.0f) {
+           canFight = true;
+       }
     
     }
     void Game::handleAppleEating() {
-        for (auto it = apples.begin(); it != apples.end();) {
+           for (auto it = apples.begin(); it != apples.end();) {
             bool wasEaten = false;
             for (auto& throngle : throngles) {
-                if (throngle.getBounds().findIntersection(it->getBounds()))
+
+                if (throngle.getBounds().findIntersection(it->getBounds())&& !throngle.getStateFight())
                 {
                     sf::Vector2f eatenPosition = it->getPosition();
                     m_ground.ReleasePosition(eatenPosition);
@@ -191,14 +202,15 @@
         if (world_config.mode == gameMode::oneVillage) {
             for (auto& throngle : throngles) {
 
-                throngle.update(dtSeconds);
+                throngle.update(dtSeconds, canFight);
 
                 if (logicTic) {
 
                     if (throngle.reproduction() == true)
                     {
-                        newBabies.emplace_back();
+                        newBabies.emplace_back(0);
                     }
+                    
 
                     throngle.hungerDecrease();
                 }
@@ -211,8 +223,8 @@
         }
         else {
             for (auto& throngle : throngles) {
-
-                throngle.update(dtSeconds);
+    
+                throngle.update(dtSeconds,canFight);
 
                 if (logicTic) {
 

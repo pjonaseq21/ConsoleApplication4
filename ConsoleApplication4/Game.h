@@ -22,6 +22,8 @@ private:
     sf::Font m_globalfont;
     Ground m_ground;
     gameConfig world_config;
+    float totalSimTime = 0.0f;
+    bool canFight = false;
     void processEvents(); 
     void update(sf::Time dt);       
     void render();   
@@ -32,7 +34,7 @@ private:
     void spawnThrongles(bool logicTic, float dtSeconds, std::vector<Throngle>& newBabies);
     float m_timer;
     std::vector<Apple> apples;
-    void spawnApples();
+    void spawnApples(float totalSimTime);
     void handleAppleEating();
     void handleDeadThrongles();
 

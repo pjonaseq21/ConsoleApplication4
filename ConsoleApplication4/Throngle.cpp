@@ -3,6 +3,7 @@
 Throngle::Throngle(int familyId,sf::Vector2f size, float startHunger) {
 	m_hunger = startHunger;
 	this->familyId = familyId;
+	territory = throngleTerritoryPosition(familyId);
 	if (familyId == 0) {
 		texture.setFillColor(sf::Color(255, 234, 0));
 	}
@@ -13,13 +14,7 @@ Throngle::Throngle(int familyId,sf::Vector2f size, float startHunger) {
 	texture.setPosition(throngleTerritoryPosition(familyId));
 
 }
-Throngle::Throngle(sf::Vector2f position, sf::Vector2f size, float startHunger) {
-	m_hunger = startHunger;
-	texture.setFillColor(sf::Color(255, 234, 0));
-	texture.setSize(size);
-	texture.setPosition(position);
 
-}
 void Throngle::render(sf::RenderWindow& window)
 {
 	window.draw(texture);
@@ -75,10 +70,17 @@ sf::FloatRect Throngle::getBounds() {
 	return texture.getGlobalBounds();
 }
 
-void Throngle::update(float dt) {
-	int random = Resources::randomNumber(-10,10);
-	m_changeDirectionTimer -= dt;
+void Throngle::update(float dt, bool canFight) {
+	std::cout << " czy ten throngle moze walczyc " << canFight <<  "\n";
+	if (canFight == true) {
+		if (checkifEnemyPosition(familyId))
+		{
+			m_state = State::Fight;
 
+		}
+	}
+	m_changeDirectionTimer -= dt;
+	
 	if (m_changeDirectionTimer <= -1) {
 		float dirX = (rand() % 201 - 100) / 100.0f;
 		float dirY = (rand() % 201 - 100) / 100.0f;
@@ -90,14 +92,39 @@ void Throngle::update(float dt) {
 sf::Vector2f Throngle::throngleTerritoryPosition(int familyId) {
 	switch (familyId) {
 	case 0:  {
-		float randomPositionFamilyx = Resources::randomNumber(0, 800);
-		float randomPositionFamilyy = Resources::randomNumber(0, 450);
+		float randomPositionFamilyx = Resources::randomNumber(100, 800);
+		float randomPositionFamilyy = Resources::randomNumber(50, 450);
 		return { randomPositionFamilyx,randomPositionFamilyy };
 	}
 	case 1: {
-		float randomPositionFamilyx = Resources::randomNumber(800, 1600);
-		float randomPositionFamilyy = Resources::randomNumber(450, 900);
+		float randomPositionFamilyx = Resources::randomNumber(800, 1550);
+		float randomPositionFamilyy = Resources::randomNumber(450, 850);
 		return { randomPositionFamilyx,randomPositionFamilyy };
 	}
+	}
+}
+
+bool Throngle::checkifEnemyPosition(int familyId) {
+	switch (familyId) {
+	case 0: {
+		if (territory.x > 800 && territory.y > 450) {
+			return true;
+		}
+		else return false;
+	}
+	case 1: {
+		if (territory.x < 800 && territory.y < 450) {
+			return true;
+		}
+		else return false;
+	}
+	}
+}
+bool Throngle::getStateFight()const {
+	if (m_state == State::Fight) {
+		return true;
+	}
+	else {
+		return false;
 	}
 }
