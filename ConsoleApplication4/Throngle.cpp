@@ -1,9 +1,9 @@
 #include "Throngle.h"
 #include <iostream>
-Throngle::Throngle(int familyId,sf::Vector2f size, float startHunger) {
+Throngle::Throngle(int familyId,sf::FloatRect territory, sf::Vector2f size, float startHunger) {
 	m_hunger = startHunger;
 	this->familyId = familyId;
-	territory = throngleTerritoryPosition(familyId);
+	this ->territory = territory;
 	if (familyId == 0) {
 		texture.setFillColor(sf::Color(255, 234, 0));
 	}
@@ -72,6 +72,7 @@ sf::FloatRect Throngle::getBounds() {
 
 void Throngle::update(float dt, bool canFight) {
 	std::cout << " czy ten throngle moze walczyc " << canFight <<  "\n";
+	
 	if (canFight == true) {
 		if (checkifEnemyPosition(familyId))
 		{
@@ -93,31 +94,27 @@ sf::Vector2f Throngle::throngleTerritoryPosition(int familyId) {
 	switch (familyId) {
 	case 0:  {
 		float randomPositionFamilyx = Resources::randomNumber(100, 800);
-		float randomPositionFamilyy = Resources::randomNumber(50, 450);
+		float randomPositionFamilyy = Resources::randomNumber(100, 800);
 		return { randomPositionFamilyx,randomPositionFamilyy };
 	}
 	case 1: {
 		float randomPositionFamilyx = Resources::randomNumber(800, 1550);
-		float randomPositionFamilyy = Resources::randomNumber(450, 850);
+		float randomPositionFamilyy = Resources::randomNumber(100, 850);
 		return { randomPositionFamilyx,randomPositionFamilyy };
 	}
 	}
 }
 
 bool Throngle::checkifEnemyPosition(int familyId) {
-	switch (familyId) {
-	case 0: {
-		if (territory.x > 800 && territory.y > 450) {
-			return true;
-		}
-		else return false;
+
+
+	sf::Vector2f myPos = texture.getPosition();
+
+	if (territory.contains(myPos)) {
+		return false;
 	}
-	case 1: {
-		if (territory.x < 800 && territory.y < 450) {
-			return true;
-		}
-		else return false;
-	}
+	else {
+		return true;  
 	}
 }
 bool Throngle::getStateFight()const {

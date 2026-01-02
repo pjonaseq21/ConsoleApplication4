@@ -35,6 +35,7 @@ private:
     float m_timer;
     std::vector<Apple> apples;
     void spawnApples(float totalSimTime);
+    sf::FloatRect setTerritory(int familyId)const;
     void handleAppleEating();
     void handleDeadThrongles();
 

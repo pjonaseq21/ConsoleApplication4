@@ -10,7 +10,7 @@ public:
 		Starve,
 		Replicate,
 	};
-	Throngle(int familyId, sf::Vector2f size = { 20.f, 70.f }, float startHunger = 0.3f);
+	Throngle(int familyId, sf::FloatRect territory, sf::Vector2f size = { 20.f, 70.f }, float startHunger = 0.3f);
 	void render(sf::RenderWindow& window);
 	void move(float moveToX, float moveToY);
 	void hungerDecrease();
@@ -23,8 +23,9 @@ public:
 	void wasEatenFunc();
 	int familyIdGet()const { return familyId; }
 	bool getStateFight()const;
+	sf::FloatRect getTerritory() { return territory; }
 private:
-	sf::Vector2f territory;
+	sf::FloatRect territory;
 	bool checkifEnemyPosition(int familyId);
 	int familyId;
 	State m_state;

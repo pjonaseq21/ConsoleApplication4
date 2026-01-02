@@ -59,11 +59,11 @@
                                 if (options[i] == 2) {
                                     world_config.mode = gameMode::twoVillages;
                                     std::cout << " wybrano dwie wioski";
-                                    throngles.emplace_back(0);
-                                    throngles.emplace_back(1);
+                                    throngles.emplace_back(0,setTerritory(0));
+                                    throngles.emplace_back(1,setTerritory(1));
                                 }
                                 else {
-                                    throngles.emplace_back(0);
+                                    throngles.emplace_back(0, setTerritory(0));
                                 }
                                 
                                
@@ -208,7 +208,7 @@
 
                     if (throngle.reproduction() == true)
                     {
-                        newBabies.emplace_back(0);
+                        newBabies.emplace_back(0, throngle.getTerritory());
                     }
                     
 
@@ -230,12 +230,27 @@
 
                     if (throngle.reproduction() == true)
                     {
-                        newBabies.emplace_back(throngle.familyIdGet());
+                        int thronglefamilyid = throngle.familyIdGet();
+                        newBabies.emplace_back(thronglefamilyid,  throngle.getTerritory());
                     }
 
                     throngle.hungerDecrease();
                 }
 
             }
+        }
+    }
+    sf::FloatRect Game::setTerritory(int familyId)const
+    {
+        if (world_config.mode == gameMode::oneVillage)
+        {
+            return { {0.f, 0.f}, {1600.f, 900.f} };
+        }
+        else
+        {
+            if (familyId == 0)
+                return { {0.f, 0.f}, {800.f, 900.f} };
+            else
+                return { {800.f, 0.f}, {800.f, 900.f} };
         }
     }
