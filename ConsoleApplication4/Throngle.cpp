@@ -1,4 +1,4 @@
-#include "Throngle.h"
+﻿#include "Throngle.h"
 #include <iostream>
 Throngle::Throngle(int familyId,sf::FloatRect territory, sf::Vector2f size, float startHunger) {
 	m_hunger = startHunger;
@@ -34,11 +34,21 @@ void Throngle::hungerDecrease() {
 	}
 	}
 void Throngle::move(float moveToX, float moveToY) {
-	
+
 	sf::Vector2f currentPosition = texture.getPosition();
-	currentPosition.x += moveToX;
-	currentPosition.y += moveToY;
+	float tempPosx = currentPosition.x + moveToX;
+	float tempPosy = currentPosition.y + moveToY;
+
+	if (tempPosx >= 0 && tempPosx <= 1600) {
+		currentPosition.x += moveToX;
+	}
+	if (tempPosy >= 0 && tempPosy <= 800) {
+		currentPosition.y += moveToY;
+	}
 	texture.setPosition(currentPosition);
+	std::cout<< currentPosition.x<< "\n";
+	std::cout<< currentPosition.y;
+
 }
 
 void Throngle::wasEatenFunc() {
@@ -46,7 +56,7 @@ void Throngle::wasEatenFunc() {
 }
 
 bool Throngle::reproduction() {
-	std::cout << m_hunger<<" glod   \n ";
+	//std::cout << m_hunger<<" glod   \n ";
 	if (m_hunger >= 0.4f)
 	{
 		m_hunger = 0.2f;
@@ -71,7 +81,7 @@ sf::FloatRect Throngle::getBounds() {
 }
 
 void Throngle::update(float dt, bool canFight) {
-	std::cout << " czy ten throngle moze walczyc " << canFight <<  "\n";
+	//std::cout << " czy ten throngle moze walczyc " << canFight <<  "\n";
 	
 	if (canFight == true) {
 		if (checkifEnemyPosition(familyId))
