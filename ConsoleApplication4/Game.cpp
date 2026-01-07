@@ -104,10 +104,10 @@
                     spawnApples(totalSimTime);
                     handleAppleEating();
                     handleDeadThrongles();
+                    handleFight();
                     spawnThrongles(logicTic,dtSeconds,newBabies);
                     for (const auto& baby : newBabies) {
                         throngles.push_back(baby);
-                        std::cout << throngles.size() << "  ilosc chmary" << '\n';
                     }
         }
 
@@ -155,6 +155,31 @@
            canFight = true;
        }
     
+    }
+    void Game::handleFight() {
+        if (canFight == true) {
+            for (auto& throngle : throngles) {
+                
+                for (auto& throngleSecond : throngles) {
+                    
+                    if (&throngle == &throngleSecond && throngle.familyIdGet() == throngleSecond.familyIdGet()) {
+                        continue;
+                    }
+
+                    if (throngle.getBounds().findIntersection(throngleSecond.getBounds())) {
+                        if (throngle.getHunger() > throngleSecond.getHunger()) {
+                            throngleSecond.setHunger();
+                            std::cout << "został ojebany \n";
+
+                        }
+                        else {
+                            throngle.setHunger();
+                            std::cout << " zostal ojebany \n";
+                        }
+                    }
+                }
+            }
+        }
     }
     void Game::handleAppleEating() {
            for (auto it = apples.begin(); it != apples.end();) {
