@@ -37,24 +37,41 @@
                     sf::Vector2f mousePos = window.mapPixelToCoords(mousePress->position);
                     if (m_state == GameState::MENU) { //czy klikniecie znajduje sie w pozycji przycisku
                   
-                                  if (m_resources.menuButton.isClicked(mousePos)) {
-                                         m_resources.configPanel();
-                                          m_state = GameState::CONFIG;
-                                          return;
-                                         }
+                        if (m_resources.menuButton.isClicked(mousePos)) {
+                             m_resources.configPanel();
+                             m_state = GameState::CONFIG;
+                             return;
+                        }
                     
-                   
+                  
+                    }
+                    if (m_state == GameState::SIMULATION_MENU) {
 
+                        for (int i = 0; i < m_resources.simStopButtons.size(); i++)
+                        {//przycisk 2 reset przycisk 1 wznów przycisk 3 menu 
+                            if (m_resources.simStopButtons[i].isClicked(mousePos)) {
+                                switch(i) {
+                                case 1: m_state = GameState::SIMULATION;
+                               // case 2: resetSimulation();
 
+                                }
+                            }
+
+                        }
                     }
 
                     else if (m_state == GameState::CONFIG)
                     {
+                        
+                      
+                        
                         std::vector<int> options = { 1,2 };
+
+
 
                         // std::cout << "Jestem w Stanie config";
                         for (size_t i = 0; i < m_resources.configButtons.size(); i++) {
-                            if (m_resources.configButtons[i]->isClicked(mousePos)) {
+                            if (m_resources.configButtons[i].isClicked(mousePos)) {
                                 
                                 if (options[i] == 2) {
                                     world_config.mode = gameMode::twoVillages;
@@ -74,12 +91,22 @@
                             }
                         }
                     }
-                  //  else if (m_state == GameState::SIMULATION) {
-                    //kod
-                    //    std::cout << "znalezlismy sie tutaj";
-                   // }
+                  
                 }
+
             }
+            else if (m_state == GameState::SIMULATION && event->getIf<sf::Event::KeyPressed>()) {
+                std::cout << "test1";
+                if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+
+                    if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
+                        m_state = GameState::SIMULATION_MENU;
+                        return;
+                    }
+                }
+
+            }
+
         }
     }
 
@@ -123,13 +150,13 @@
         }
         else if (m_state == GameState::CONFIG) {
              window.draw(m_resources.backgroundMainMenu);
-            for (auto btn : m_resources.configButtons) {
-                btn->render(window);
+            for (auto& btn : m_resources.configButtons) {
+                btn.render(window);
             }
 
         }
         
-        else if (m_state == GameState::SIMULATION) {
+        else if (m_state == GameState::SIMULATION || m_state == GameState::SIMULATION_MENU) {
             window.draw(m_resources.backgroundSimulation);
             
             m_ground.render(window);
@@ -138,6 +165,13 @@
             }
             for (auto& apple : apples) {
                 apple.render(window);
+            }
+            if (m_state == GameState::SIMULATION_MENU) {
+                m_resources.simMenu(window);
+                for (auto& btn : m_resources.simStopButtons) {
+                    btn.render(window);
+                }
+
             }
         }
         window.display();
@@ -253,4 +287,9 @@
             else
                 return { {800.f, 0.f}, {800.f, 900.f} };
         }
+    }
+    void Game::resetSimulation() {
+        throngles.clear();
+        apples.clear();
+
     }

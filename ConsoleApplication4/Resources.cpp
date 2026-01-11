@@ -34,15 +34,35 @@ float Resources::randomNumber(float x1,float x2) {
     return dist(mt);
 }
 
+void Resources::simMenu(sf::RenderWindow& window) {
+    Overlay.setSize(sf::Vector2f{ 1920,900 });
+    Overlay.setFillColor(sf::Color(0, 0, 0, 100));
+    window.draw(Overlay);
+    simStopButtons.clear();
+    float startY = 580.f;
+    std::vector<int> options = { 1, 2, 3 };
+    for (int optionValue : options) {
+        if (optionValue == 1) {
+            label = "Restartuj";
+        }
+        else if (optionValue == 2) {
+            label = "Menu Główne";
+        }
+        else {
+            label = "Wróc do gry";
+        }
+        simStopButtons.emplace_back(sharedFont, label, sf::Vector2f{ 950.f, startY }, sf::Vector2f{ 100.f, 50.f });
+       
+        startY -= 100.f;
+    }
+}
+
 void Resources::configPanel()
 {
     float startX = 950.f;
    
-    for (auto btn: configButtons) {
-        delete btn;
-    }
+    configButtons.clear();
     std::vector<int> options = { 1, 2};
-    std::string label;
     for (int optionValue : options) {
         if (optionValue > 1) {
             label = std::to_string(optionValue) + " osady";
@@ -51,8 +71,7 @@ void Resources::configPanel()
             label = std::to_string(optionValue) + " osada";
         }
 
-        Button* newBtn = new Button(sharedFont, label, { startX, 580.f }, { 100.f, 50.f });
-        configButtons.push_back(newBtn);
+        configButtons.emplace_back(sharedFont, label, sf::Vector2f{ startX, 580.f }, sf::Vector2f{ 100.f, 50.f });
         startX -= 200;
     }
   

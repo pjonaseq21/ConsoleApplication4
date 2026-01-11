@@ -9,6 +9,7 @@
 enum class GameState {
     MENU,
     SIMULATION,
+    SIMULATION_MENU,
     CONFIG,
     GAME_OVER
 };
@@ -38,5 +39,6 @@ private:
     sf::FloatRect setTerritory(int familyId)const;
     void handleAppleEating();
     void handleDeadThrongles();
+    void resetSimulation();
 
 };

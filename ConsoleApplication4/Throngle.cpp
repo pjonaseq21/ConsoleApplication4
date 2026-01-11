@@ -46,8 +46,6 @@ void Throngle::move(float moveToX, float moveToY) {
 		currentPosition.y += moveToY;
 	}
 	texture.setPosition(currentPosition);
-	std::cout<< currentPosition.x<< "\n";
-	std::cout<< currentPosition.y;
 
 }
 
