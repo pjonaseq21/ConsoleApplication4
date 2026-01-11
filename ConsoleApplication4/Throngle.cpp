@@ -77,7 +77,9 @@ void Throngle::grow() {
 sf::FloatRect Throngle::getBounds() {
 	return texture.getGlobalBounds();
 }
-
+void Throngle::setHunger() {
+	m_hunger = -15;
+}
 void Throngle::update(float dt, bool canFight) {
 	//std::cout << " czy ten throngle moze walczyc " << canFight <<  "\n";
 	

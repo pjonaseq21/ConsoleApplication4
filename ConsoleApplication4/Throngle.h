@@ -22,8 +22,10 @@ public:
 	float getHunger()const { return m_hunger; }// ciekawy sposob na zapisanie gettera
 	void wasEatenFunc();
 	int familyIdGet()const { return familyId; }
+	void fightHandle();
 	bool getStateFight()const;
 	sf::FloatRect getTerritory() { return territory; }
+	void setHunger();
 private:
 	sf::FloatRect territory;
 	bool checkifEnemyPosition(int familyId);

@@ -20,6 +20,7 @@ public:
     void run(); 
 
 private:
+    void handleFight();
     sf::Font m_globalfont;
     Ground m_ground;
     gameConfig world_config;
