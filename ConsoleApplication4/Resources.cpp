@@ -44,14 +44,17 @@ void Resources::simMenu(sf::RenderWindow& window) {
     for (int optionValue : options) {
         if (optionValue == 1) {
             label = "Restartuj";
+
+
         }
         else if (optionValue == 2) {
-            label = "Menu Główne";
+            label = L"Menu Główne";
         }
         else {
-            label = "Wróc do gry";
+            label = L"Wróc do gry";
+
         }
-        simStopButtons.emplace_back(sharedFont, label, sf::Vector2f{ 950.f, startY }, sf::Vector2f{ 100.f, 50.f });
+        simStopButtons.emplace_back(sharedFont, label, sf::Vector2f{ 800.f, startY }, sf::Vector2f{ 150.f, 50.f });
        
         startY -= 100.f;
     }

@@ -5,10 +5,12 @@
 
 
 
-    Game::Game():m_resources(m_globalfont) {
-        if (!m_globalfont.openFromFile("assets/ARIAL.ttf")) {
+    Game::Game():m_resources(m_globalfont), fightSprite(fightSpriteTexture) {
+        if (!m_globalfont.openFromFile("assets/ARIAL.ttf") || !fightSpriteTexture.loadFromFile("assets/miecze.png")) {
             std::exit(1);
         }
+        fightSprite.setTexture(fightSpriteTexture, true);
+        m_resources.menuButton.centerText();
         window.create(sf::VideoMode({ 1600, 900 }), "Chmara");
         window.setFramerateLimit(60);
         m_state = GameState::MENU;
@@ -17,7 +19,7 @@
     }
 
     void Game::run() {
-        sf::Clock clock; 
+         
         while (window.isOpen()) {
             sf::Time dt = clock.restart();
             processEvents();
@@ -51,9 +53,9 @@
                         {//przycisk 2 reset przycisk 1 wznów przycisk 3 menu 
                             if (m_resources.simStopButtons[i].isClicked(mousePos)) {
                                 switch(i) {
-                                case 1: m_state = GameState::SIMULATION;
-                               // case 2: resetSimulation();
-
+                                case 0: resetSimulation(); break;
+                                case 1: m_state = GameState::MENU; break;
+                                case 2: m_state = GameState::SIMULATION; break;
                                 }
                             }
 
@@ -62,8 +64,8 @@
 
                     else if (m_state == GameState::CONFIG)
                     {
-                        
-                      
+                        throngles.clear();
+                        apples.clear();
                         
                         std::vector<int> options = { 1,2 };
 
@@ -75,7 +77,6 @@
                                 
                                 if (options[i] == 2) {
                                     world_config.mode = gameMode::twoVillages;
-                                    std::cout << " wybrano dwie wioski";
                                     throngles.emplace_back(0,setTerritory(0));
                                     throngles.emplace_back(1,setTerritory(1));
                                 }
@@ -147,6 +148,7 @@
         if (m_state == GameState::MENU) {
             window.draw(m_resources.backgroundMainMenu);
             m_resources.menuButton.render(window);
+
         }
         else if (m_state == GameState::CONFIG) {
              window.draw(m_resources.backgroundMainMenu);
@@ -157,14 +159,19 @@
         }
         
         else if (m_state == GameState::SIMULATION || m_state == GameState::SIMULATION_MENU) {
+          
+
             window.draw(m_resources.backgroundSimulation);
-            
             m_ground.render(window);
             for (auto& throngle : throngles) {
                 throngle.render(window);
             }
             for (auto& apple : apples) {
                 apple.render(window);
+            }
+            if (fightSpriteBool && fightClock.getElapsedTime().asSeconds() > 2.0f)fightSpriteBool = false;
+            if (fightSpriteBool == true) {
+                window.draw(fightSprite);
             }
             if (m_state == GameState::SIMULATION_MENU) {
                 m_resources.simMenu(window);
@@ -183,6 +190,7 @@
        if (apples.size() < 60- totalSimTime) {
            for (int i = 0; i < Resources::randomNumber(0, 5); i++) {
                apples.emplace_back(m_ground.returnFreeTile());
+               std::cout << apples.size()<<"\n";
            }
        }
        if (apples.size() < 40 && world_config.mode== gameMode::twoVillages && totalSimTime >12.0f) {
@@ -196,12 +204,17 @@
                 
                 for (auto& throngleSecond : throngles) {
                     
-                    if (&throngle == &throngleSecond && throngle.familyIdGet() == throngleSecond.familyIdGet()) {
+                    if (&throngle == &throngleSecond || throngle.familyIdGet() == throngleSecond.familyIdGet()) {
                         continue;
                     }
 
                     if (throngle.getBounds().findIntersection(throngleSecond.getBounds())) {
                         if (throngle.getHunger() > throngleSecond.getHunger()) {
+
+                            fightSprite.setPosition({throngle.getBounds().position.x, throngle.getBounds().position.y});
+                            fightClock.restart();
+                            fightSpriteBool = true;
+
                             throngleSecond.setHunger();
                             std::cout << "został ojebany \n";
 
@@ -316,5 +329,19 @@
     void Game::resetSimulation() {
         throngles.clear();
         apples.clear();
+        totalSimTime =0;
+        m_state = GameState::SIMULATION;
+        if (world_config.mode ==gameMode::twoVillages) {
+            throngles.emplace_back(0, setTerritory(0));
+            throngles.emplace_back(1, setTerritory(1));
+            apples.emplace_back(m_ground.returnFreeTile()); 
+            
+        }
+        else {
+            world_config.mode = gameMode::oneVillage;
+            throngles.emplace_back(0, setTerritory(0));
+            apples.emplace_back(m_ground.returnFreeTile());
+
+        }
 
     }

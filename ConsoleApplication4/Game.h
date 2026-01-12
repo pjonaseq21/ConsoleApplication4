@@ -20,10 +20,15 @@ public:
     void run(); 
 
 private:
+    sf::Clock clock;
+    sf::Clock fightClock;
     void handleFight();
     sf::Font m_globalfont;
     Ground m_ground;
     gameConfig world_config;
+    bool fightSpriteBool = false;
+    sf::Texture fightSpriteTexture;
+    sf::Sprite fightSprite;
     float totalSimTime = 0.0f;
     bool canFight = false;
     void processEvents(); 

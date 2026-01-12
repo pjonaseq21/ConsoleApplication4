@@ -3,12 +3,11 @@
 
 
 
-Button::Button(sf::Font& font, std::string text, sf::Vector2f position, sf::Vector2f size):buttonText(font) {
+Button::Button(sf::Font& font, sf::String text, sf::Vector2f position, sf::Vector2f size):buttonText(font) {
 	
 
 	button.setSize(size);
 	button.setPosition(position);
-	buttonText.setFont(font);
 	buttonText.setString(text);
 	buttonText.setCharacterSize(20);
 
@@ -26,8 +25,8 @@ Button::Button(sf::Font& font, std::string text, sf::Vector2f position, sf::Vect
 		});
 
 	buttonText.setPosition({
-		button.getPosition().x + button.getSize().x / 2.2f,
-		button.getPosition().y + button.getSize().y / 2.5f
+		button.getPosition().x + button.getSize().x / 2.f,
+		button.getPosition().y + button.getSize().y / 2.f
 		});
 
 }
@@ -47,4 +46,15 @@ bool Button::isClicked(sf::Vector2f mousepos) {
 	else {
 		return false;
 	}
+}
+void Button::centerText() {
+	sf::FloatRect bounds = buttonText.getLocalBounds();
+	buttonText.setOrigin({
+		bounds.position.x + bounds.size.x / 2.0f,
+		bounds.position.y + bounds.size.y / 2.0f
+		});
+	buttonText.setPosition({
+		button.getPosition().x + button.getSize().x / 2.0f,
+		button.getPosition().y + button.getSize().y / 2.0f
+		});
 }

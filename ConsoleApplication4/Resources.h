@@ -5,7 +5,7 @@ class Resources
 {
 private:
     sf::Font& sharedFont;
-    std::string label;
+    sf::String label;
 public:
     sf::RectangleShape Overlay;
     sf::Texture backgroundTexture;
