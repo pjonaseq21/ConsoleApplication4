@@ -143,6 +143,7 @@
     <Image Include="assets\background.jpg" />
     <Image Include="assets\miecze.png" />
     <Image Include="assets\Simulation_background.jpg" />
+    <Image Include="assets\throngleA.png" />
     <Image Include="D:\folderzplikamidoc++\background.jpg" />
     <Image Include="D:\miecze.png" />
   </ItemGroup>

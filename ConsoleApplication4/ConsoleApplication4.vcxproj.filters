@@ -56,6 +56,9 @@
     <Image Include="assets\miecze.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\throngleA.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

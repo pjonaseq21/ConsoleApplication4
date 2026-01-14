@@ -76,12 +76,14 @@
                             if (m_resources.configButtons[i].isClicked(mousePos)) {
                                 
                                 if (options[i] == 2) {
+                                    std::cout << "test tryb numer dwa";
                                     world_config.mode = gameMode::twoVillages;
-                                    throngles.emplace_back(0,setTerritory(0));
-                                    throngles.emplace_back(1,setTerritory(1));
+                                    throngles.push_back(std::make_unique<Throngle>(0,setTerritory(0)));
+                                    throngles.push_back(std::make_unique<Throngle>(1, setTerritory(1)));
                                 }
                                 else {
-                                    throngles.emplace_back(0, setTerritory(0));
+                                    world_config.mode = gameMode::oneVillage;
+                                    throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
                                 }
                                 
                                
@@ -121,7 +123,7 @@
                     totalSimTime += dtSeconds;
                    
 
-                    std::vector<Throngle> newBabies;
+                    std::vector<std::unique_ptr<Throngle>> newBabies;
                     bool logicTic = false;
                     float groundCooldown = 0.0f;
                     m_ground.update(dtSeconds);
@@ -134,8 +136,8 @@
                     handleDeadThrongles();
                     handleFight();
                     spawnThrongles(logicTic,dtSeconds,newBabies);
-                    for (const auto& baby : newBabies) {
-                        throngles.push_back(baby);
+                    for (auto& baby : newBabies) {
+                        throngles.push_back(std::move(baby));
                     }
         }
 
@@ -164,7 +166,7 @@
             window.draw(m_resources.backgroundSimulation);
             m_ground.render(window);
             for (auto& throngle : throngles) {
-                throngle.render(window);
+                throngle->render(window);
             }
             for (auto& apple : apples) {
                 apple.render(window);
@@ -204,23 +206,23 @@
                 
                 for (auto& throngleSecond : throngles) {
                     
-                    if (&throngle == &throngleSecond || throngle.familyIdGet() == throngleSecond.familyIdGet()) {
+                    if (&throngle == &throngleSecond || throngle->familyIdGet() == throngleSecond->familyIdGet()) {
                         continue;
                     }
 
-                    if (throngle.getBounds().findIntersection(throngleSecond.getBounds())) {
-                        if (throngle.getHunger() > throngleSecond.getHunger()) {
+                    if (throngle->getBounds().findIntersection(throngleSecond->getBounds())) {
+                        if (throngle->getHunger() > throngleSecond->getHunger()) {
 
-                            fightSprite.setPosition({throngle.getBounds().position.x, throngle.getBounds().position.y});
+                            fightSprite.setPosition({throngle->getBounds().position.x, throngle->getBounds().position.y});
                             fightClock.restart();
                             fightSpriteBool = true;
 
-                            throngleSecond.setHunger();
+                            throngleSecond->setHunger();
                             std::cout << "został ojebany \n";
 
                         }
                         else {
-                            throngle.setHunger();
+                            throngle->setHunger();
                             std::cout << " zostal ojebany \n";
                         }
                     }
@@ -233,14 +235,14 @@
             bool wasEaten = false;
             for (auto& throngle : throngles) {
 
-                if (throngle.getBounds().findIntersection(it->getBounds())&& !throngle.getStateFight())
+                if (throngle->getBounds().findIntersection(it->getBounds())&& !throngle->getStateFight())
                 {
                     sf::Vector2f eatenPosition = it->getPosition();
                     m_ground.ReleasePosition(eatenPosition);
                     it = apples.erase(it); //zwraca iterator do nastepnego elementu
                     wasEaten = true;
-                    throngle.eat();
-                    throngle.wasEatenFunc();
+                    throngle->eat();
+                    throngle->wasEatenFunc();
                     break;
                 }
                
@@ -255,11 +257,10 @@
     void Game::handleDeadThrongles() {
         for (auto it = throngles.begin(); it != throngles.end();) {
             bool starvingThrongle = false;
-                if (it->getHunger() <-0.05)
+                if ((*it)->getHunger() <-0.05)
                 {
                     it = throngles.erase(it); //zwraca iterator do nastepnego elementu
                     starvingThrongle = true;
-                    break;
                 }
 
                 if (!starvingThrongle) {
@@ -270,47 +271,25 @@
             
         }
     }
-    void Game::spawnThrongles(bool logicTic,float dtSeconds,std::vector<Throngle>&newBabies) {
-        if (world_config.mode == gameMode::oneVillage) {
+    void Game::spawnThrongles(bool logicTic,float dtSeconds, std::vector<std::unique_ptr<Throngle>>& newBabies) {
+        
             for (auto& throngle : throngles) {
 
-                throngle.update(dtSeconds, canFight);
+                throngle->update(dtSeconds, canFight);
 
                 if (logicTic) {
-
-                    if (throngle.reproduction() == true)
-                    {
-                        newBabies.emplace_back(0, throngle.getTerritory());
+                    if (throngles.size() < 70) {
+                        if (throngle->reproduction() == true)
+                        {
+                            newBabies.push_back(std::make_unique<Throngle>(throngle->familyIdGet(), throngle->getTerritory()));
+                        }
                     }
-                    
-
-                    throngle.hungerDecrease();
-                }
-
-
-
-            }
-
-          
-        }
-        else {
-            for (auto& throngle : throngles) {
-    
-                throngle.update(dtSeconds,canFight);
-
-                if (logicTic) {
-
-                    if (throngle.reproduction() == true)
-                    {
-                        int thronglefamilyid = throngle.familyIdGet();
-                        newBabies.emplace_back(thronglefamilyid,  throngle.getTerritory());
-                    }
-
-                    throngle.hungerDecrease();
+                    throngle->hungerDecrease();
                 }
 
             }
-        }
+        
+        
     }
     sf::FloatRect Game::setTerritory(int familyId)const
     {
@@ -332,14 +311,14 @@
         totalSimTime =0;
         m_state = GameState::SIMULATION;
         if (world_config.mode ==gameMode::twoVillages) {
-            throngles.emplace_back(0, setTerritory(0));
-            throngles.emplace_back(1, setTerritory(1));
-            apples.emplace_back(m_ground.returnFreeTile()); 
+            throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
+            throngles.push_back(std::make_unique<Throngle>(1, setTerritory(1)));
+            apples.emplace_back(m_ground.returnFreeTile());
             
         }
         else {
             world_config.mode = gameMode::oneVillage;
-            throngles.emplace_back(0, setTerritory(0));
+            throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
             apples.emplace_back(m_ground.returnFreeTile());
 
         }
