@@ -32,7 +32,7 @@ void Throngle::render(sf::RenderWindow& window)
 
 }
 //zmienic nazwe funkcji bo nie oznacza tego nawet, to ma zwiekszac glod
-void Throngle::hungerDecrease() {
+void Throngle::hungerIncrease() {
 	if (wasEatenThrongle) {
 		sf::Vector2f currSize = hitbox.getSize();
 		currSize.x = currSize.x * 0.999;

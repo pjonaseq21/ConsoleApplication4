@@ -13,13 +13,13 @@ public:
 	Throngle(int familyId, sf::FloatRect territory, sf::Vector2f size = { 32, 32.f }, float startHunger = 0.3f);
 	void render(sf::RenderWindow& window);
 	void move(float moveToX, float moveToY);
-	void hungerDecrease();
+	void hungerIncrease();
 	bool reproduction();
 	void update(float dt, bool canFight);
 	sf::Vector2f getPosition()const;
 	sf::FloatRect getBounds();
 	void eat();
-	float getHunger()const { return m_hunger; }// ciekawy sposob na zapisanie gettera
+	float getHunger()const { return m_hunger; }
 	void wasEatenFunc();
 	int familyIdGet()const { return familyId; }
 	void fightHandle();

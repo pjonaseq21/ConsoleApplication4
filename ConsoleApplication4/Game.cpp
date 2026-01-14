@@ -71,7 +71,6 @@
 
 
 
-                        // std::cout << "Jestem w Stanie config";
                         for (size_t i = 0; i < m_resources.configButtons.size(); i++) {
                             if (m_resources.configButtons[i].isClicked(mousePos)) {
                                 
@@ -99,7 +98,6 @@
 
             }
             else if (m_state == GameState::SIMULATION && event->getIf<sf::Event::KeyPressed>()) {
-                std::cout << "test1";
                 if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
 
                     if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
@@ -218,12 +216,10 @@
                             fightSpriteBool = true;
 
                             throngleSecond->setHunger();
-                            std::cout << "został ojebany \n";
 
                         }
                         else {
                             throngle->setHunger();
-                            std::cout << " zostal ojebany \n";
                         }
                     }
                 }
@@ -284,7 +280,7 @@
                             newBabies.push_back(std::make_unique<Throngle>(throngle->familyIdGet(), throngle->getTerritory()));
                         }
                     }
-                    throngle->hungerDecrease();
+                    throngle->hungerIncrease();
                 }
 
             }
