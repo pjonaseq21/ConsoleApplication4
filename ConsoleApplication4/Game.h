@@ -6,6 +6,7 @@
 #include "Throngle.h"
 #include "Ground.h"
 #include "gameSettings.h"
+#include <memory>
 enum class GameState {
     MENU,
     SIMULATION,
@@ -37,8 +38,8 @@ private:
     GameState m_state;
     Resources m_resources;
     sf::RenderWindow window;
-    std::vector<Throngle> throngles;
-    void spawnThrongles(bool logicTic, float dtSeconds, std::vector<Throngle>& newBabies);
+    std::vector<std::unique_ptr<Throngle>> throngles;
+    void spawnThrongles(bool logicTic, float dtSeconds, std::vector<std::unique_ptr<Throngle>>& newBabies);
     float m_timer;
     std::vector<Apple> apples;
     void spawnApples(float totalSimTime);

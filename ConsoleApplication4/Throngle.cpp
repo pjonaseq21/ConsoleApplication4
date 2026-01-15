@@ -1,32 +1,43 @@
 ﻿#include "Throngle.h"
 #include <iostream>
-Throngle::Throngle(int familyId,sf::FloatRect territory, sf::Vector2f size, float startHunger) {
+Throngle::Throngle(int familyId,sf::FloatRect territory, sf::Vector2f size, float startHunger):throngleSprite(throngleTexture){
+	if (!throngleTexture.loadFromFile("assets/throngleA.png")) {
+		std::exit(1);
+	}
+	throngleSprite.setTexture(throngleTexture);
+	rectSource = sf::IntRect({ 0, 0 }, { 32, 32 });
+	throngleSprite.setTextureRect(rectSource);
+	hitbox.setOrigin({ 10,10 });
+
 	m_hunger = startHunger;
 	this->familyId = familyId;
 	this ->territory = territory;
 	if (familyId == 0) {
-		texture.setFillColor(sf::Color(255, 234, 0));
+		hitbox.setFillColor(sf::Color::Transparent);
 	}
 	else {
-		texture.setFillColor(sf::Color::Red);
+		hitbox.setFillColor(sf::Color::Transparent);
+		throngleSprite.setColor(sf::Color::Red);
+
 	}
-	texture.setSize(size);
-	texture.setPosition(throngleTerritoryPosition(familyId));
+	hitbox.setSize(size);
+	hitbox.setPosition(throngleTerritoryPosition(familyId));
+	throngleSprite.setPosition(hitbox.getPosition());
 
 }
 
 void Throngle::render(sf::RenderWindow& window)
 {
-	window.draw(texture);
+	window.draw(throngleSprite);
 
 }
 //zmienic nazwe funkcji bo nie oznacza tego nawet, to ma zwiekszac glod
-void Throngle::hungerDecrease() {
+void Throngle::hungerIncrease() {
 	if (wasEatenThrongle) {
-		sf::Vector2f currSize = texture.getSize();
+		sf::Vector2f currSize = hitbox.getSize();
 		currSize.x = currSize.x * 0.999;
 		currSize.y = currSize.y * 0.999;
-		texture.setSize(currSize);
+		hitbox.setSize(currSize);
 	}
 	else {
 		m_hunger -= 0.01;
@@ -35,7 +46,7 @@ void Throngle::hungerDecrease() {
 	}
 void Throngle::move(float moveToX, float moveToY) {
 
-	sf::Vector2f currentPosition = texture.getPosition();
+	sf::Vector2f currentPosition = hitbox.getPosition();
 	float tempPosx = currentPosition.x + moveToX;
 	float tempPosy = currentPosition.y + moveToY;
 
@@ -45,8 +56,8 @@ void Throngle::move(float moveToX, float moveToY) {
 	if (tempPosy >= 0 && tempPosy <= 800) {
 		currentPosition.y += moveToY;
 	}
-	texture.setPosition(currentPosition);
-
+	hitbox.setPosition(currentPosition);
+	throngleSprite.setPosition(currentPosition);
 }
 
 void Throngle::wasEatenFunc() {
@@ -68,14 +79,19 @@ void Throngle::eat() {
 
 }
 void Throngle::grow() {
-	sf::Vector2f currSize =texture.getSize();
+	sf::Vector2f currSize =hitbox.getSize();
 	currSize.x += 15;
 	currSize.y += 10;
-	texture.setSize(currSize);
+	sf::Vector2f textureSize;
+	textureSize.x = static_cast<float>(throngleSprite.getTextureRect().size.x);
+	textureSize.y = static_cast<float>(throngleSprite.getTextureRect().size.y);
+	throngleSprite.setScale({currSize.x / textureSize.x , currSize.y / textureSize.y });
+	hitbox.setSize(currSize);
+
 }
 
 sf::FloatRect Throngle::getBounds() {
-	return texture.getGlobalBounds();
+	return hitbox.getGlobalBounds();
 }
 void Throngle::setHunger() {
 	m_hunger = -15;
@@ -118,7 +134,7 @@ sf::Vector2f Throngle::throngleTerritoryPosition(int familyId) {
 bool Throngle::checkifEnemyPosition(int familyId) {
 
 
-	sf::Vector2f myPos = texture.getPosition();
+	sf::Vector2f myPos = hitbox.getPosition();
 
 	if (territory.contains(myPos)) {
 		return false;
