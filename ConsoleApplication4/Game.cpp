@@ -11,7 +11,7 @@
         }
         fightSprite.setTexture(fightSpriteTexture, true);
         m_resources.menuButton.centerText();
-        window.create(sf::VideoMode({ 1600, 900 }), "Chmara");
+        window.create(sf::VideoMode::getDesktopMode(), "Chmara", sf::State::Fullscreen);
         window.setFramerateLimit(60);
         m_state = GameState::MENU;
         apples.emplace_back(m_ground.returnFreeTile()); //stworzenie pierwszego jablka

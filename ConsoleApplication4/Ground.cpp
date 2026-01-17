@@ -4,8 +4,8 @@
 Ground::Ground() {
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < columns; c++) {
-			float posx = PADDING + (c * TILE_SIZE);
-			float posy = PADDING + (r * TILE_SIZE);
+			float posx = startX + (c * TILE_SIZE);
+			float posy = startY + (r * TILE_SIZE);
 			Tile newTile;
 			newTile.isOccupied = false;
 			newTile.cooldown = 0.0f;

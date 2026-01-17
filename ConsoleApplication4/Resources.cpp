@@ -8,19 +8,19 @@
 Resources::Resources(sf::Font& font) :sharedFont(font), menuButton(font, "Nowa Gra", {750.f, 580.f}, {200.f, 50.f}), backgroundMainMenu(backgroundTexture), backgroundSimulation(simTexture) {
 
 
-    if (!backgroundTexture.loadFromFile("assets/background.jpg")) {
+    if (!backgroundTexture.loadFromFile("assets/background.png")) {
         std::cerr << "BLAD: Nie udalo sie zaladowac tekstury!" << std::endl;
     }
     else {
-        backgroundMainMenu.setTexture(backgroundTexture, true); //tło
-
+        backgroundMainMenu.setTexture(backgroundTexture, true); //tło menu
+        scaleSprite(backgroundTexture, backgroundMainMenu);
     }
-    if (!simTexture.loadFromFile("assets/Simulation_background.jpg")) {
+    if (!simTexture.loadFromFile("assets/sim_background.png")) {
         std::cerr << "BLAD: Nie udalo sie zaladowac tekstury!" << std::endl;
     }
     else {
         backgroundSimulation.setTexture(simTexture, true); //tło
-
+        scaleSprite(simTexture, backgroundSimulation);
     }
 }
 
@@ -33,9 +33,18 @@ float Resources::randomNumber(float x1,float x2) {
     std::uniform_int_distribution<int> dist(x1, x2);
     return dist(mt);
 }
+void Resources::scaleSprite(sf::Texture& texture,sf::Sprite& sprite)const {
+    sf::Vector2u textureSize = texture.getSize();
+    float screenWidth = (float)desktop_Size.size.x / textureSize.x;
+    float screenHeight = (float)desktop_Size.size.y / textureSize.y;
+    float scale = std::max(screenWidth, screenHeight);
+    sprite.setScale({ scale,scale });
+}
 
 void Resources::simMenu(sf::RenderWindow& window) {
-    Overlay.setSize(sf::Vector2f{ 1920,900 });
+    float screenWidth = (float)desktop_Size.size.x;
+    float screenHeight = (float)desktop_Size.size.y;
+    Overlay.setSize({ screenWidth,screenHeight });
     Overlay.setFillColor(sf::Color(0, 0, 0, 100));
     window.draw(Overlay);
     simStopButtons.clear();

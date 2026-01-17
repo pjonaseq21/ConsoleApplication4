@@ -146,6 +146,7 @@
     <Image Include="assets\throngleA.png" />
     <Image Include="D:\folderzplikamidoc++\background.jpg" />
     <Image Include="D:\miecze.png" />
+    <Image Include="D:\sim_background.png" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Apple.h" />
