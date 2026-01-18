@@ -1,4 +1,5 @@
 ﻿#include "Throngle.h"
+#include "Ground.h"
 #include <iostream>
 Throngle::Throngle(int familyId,sf::FloatRect territory, sf::Vector2f size, float startHunger):throngleSprite(throngleTexture){
 	if (!throngleTexture.loadFromFile("assets/throngleA.png")) {
@@ -103,7 +104,6 @@ void Throngle::update(float dt, bool canFight) {
 		if (checkifEnemyPosition(familyId))
 		{
 			m_state = State::Fight;
-
 		}
 	}
 	m_changeDirectionTimer -= dt;

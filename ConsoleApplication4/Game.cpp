@@ -5,16 +5,17 @@
 
 
 
-    Game::Game():m_resources(m_globalfont), fightSprite(fightSpriteTexture) {
+    Game::Game():m_resources(m_globalfont), fightSprite(fightSpriteTexture){
         if (!m_globalfont.openFromFile("assets/ARIAL.ttf") || !fightSpriteTexture.loadFromFile("assets/miecze.png")) {
             std::exit(1);
         }
         fightSprite.setTexture(fightSpriteTexture, true);
         m_resources.menuButton.centerText();
+        //window.create(sf::VideoMode({1600,900}), "Chmara", sf::State::Fullscreen);
         window.create(sf::VideoMode::getDesktopMode(), "Chmara", sf::State::Fullscreen);
+        m_resources.scaleSprite(window);
         window.setFramerateLimit(60);
         m_state = GameState::MENU;
-        apples.emplace_back(m_ground.returnFreeTile()); //stworzenie pierwszego jablka
         
     }
 
@@ -77,11 +78,15 @@
                                 if (options[i] == 2) {
                                     std::cout << "test tryb numer dwa";
                                     world_config.mode = gameMode::twoVillages;
+                                    m_ground.init(window.getSize().x, window.getSize().y,false);
+                                    apples.emplace_back(m_ground.returnFreeTile());
                                     throngles.push_back(std::make_unique<Throngle>(0,setTerritory(0)));
                                     throngles.push_back(std::make_unique<Throngle>(1, setTerritory(1)));
                                 }
                                 else {
                                     world_config.mode = gameMode::oneVillage;
+                                    m_ground.init(window.getSize().x, window.getSize().y,true);
+                                    apples.emplace_back(m_ground.returnFreeTile());
                                     throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
                                 }
                                 
@@ -193,8 +198,9 @@
                std::cout << apples.size()<<"\n";
            }
        }
-       if (apples.size() < 40 && world_config.mode== gameMode::twoVillages && totalSimTime >12.0f) {
+       if (apples.size() < 40 && world_config.mode== gameMode::twoVillages && totalSimTime >12.0f && !canFight ) {
            canFight = true;
+           //tutaj chyba dodac 
        }
     
     }

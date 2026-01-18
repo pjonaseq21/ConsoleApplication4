@@ -8,22 +8,27 @@ struct Tile {
 };
 class Ground
 {
-	//dynamiczny paddign, poprawa siatki
-	const int TILE_SIZE = 50;
-	const int PADDING = 5;
-	sf::VideoMode desktop_Size = sf::VideoMode::getDesktopMode();
-	unsigned int screenWidth = desktop_Size.size.x;
-	unsigned int screenHeight = desktop_Size.size.y;
-	int columns = (screenWidth - (2 * PADDING)) / TILE_SIZE;
-	int rows = (screenHeight- (2 * PADDING)) / TILE_SIZE;
-	float totalGridWidth = columns * TILE_SIZE;
-	float totalGridHeight = rows * TILE_SIZE;
-	float startX = (screenWidth - totalGridWidth) / 2.0f;
-	float startY = (screenHeight - totalGridHeight) / 2.0f;
+    const int TILE_SIZE = 50;
+	
+    unsigned int screenWidth;
+    unsigned int screenHeight;
+    int columns;
+    int rows;
+    float startX;
+    float startY;
+
+    int centerCol;
+    int gapStartCol;
+    int gapEndCol;
 	std::vector<Tile>vectorTiles;
 
+	int bridgeStart;
+	int bridgeEnd;
+
 public:
+	float getBridgeCenterY() const;
 	void update(float dt);
+	void init(unsigned int screenwidth, unsigned int screenheight, bool singleGame);
 	void ReleasePosition(sf::Vector2f eatenPosition);
 	Ground();
 	void render(sf::RenderWindow& window);
