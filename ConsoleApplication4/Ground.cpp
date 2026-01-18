@@ -82,7 +82,8 @@ sf::Vector2f Ground::returnFreeTile() {
 
 
 float Ground::getBridgeCenterY() const {
-	float centerY = startY + ((bridgeStart + bridgeEnd) / 2.0f * TILE_SIZE);
+	int centerRow = rows / 2;
+	float centerY = startY + (centerRow * TILE_SIZE);
 	return centerY;
 }
 void Ground::update(float dt) {
