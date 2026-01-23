@@ -191,14 +191,13 @@
 
 
     void Game::spawnApples(float totalSimTime) {
-       
-       if (apples.size() < 100- totalSimTime) {
+       //do zmiany
+       if (apples.size() < 70- totalSimTime) {
            for (int i = 0; i < Resources::randomNumber(0, 5); i++) {
                apples.emplace_back(m_ground.returnFreeTile());
-               std::cout << apples.size()<<"\n";
            }
        }
-       if (apples.size() < 70 && world_config.mode== gameMode::twoVillages && totalSimTime >12.0f && !canFight ) {
+       if (apples.size() < 30 && world_config.mode== gameMode::twoVillages && totalSimTime >12 && !canFight ) {
            canFight = true;
            //tutaj chyba dodac 
            float bridgePos = m_ground.getBridgeCenterY();
@@ -209,7 +208,7 @@
     void Game::handleFight() {
         if (canFight == true) {
             for (auto& throngle : throngles) {
-            
+           
                 for (auto& throngleSecond : throngles) {
                     
                     if (&throngle == &throngleSecond || throngle->familyIdGet() == throngleSecond->familyIdGet()) {
@@ -278,11 +277,10 @@
     void Game::spawnThrongles(bool logicTic,float dtSeconds, std::vector<std::unique_ptr<Throngle>>& newBabies) {
         
             for (auto& throngle : throngles) {
-
                 throngle->update(dtSeconds, canFight);
                 
                 if (logicTic) {
-                    if (throngles.size() < 70) {
+                    if (throngles.size() < 60) {
                         if (throngle->reproduction() == true)
                         {
                             newBabies.push_back(std::make_unique<Throngle>(throngle->familyIdGet(), throngle->getTerritory()));
