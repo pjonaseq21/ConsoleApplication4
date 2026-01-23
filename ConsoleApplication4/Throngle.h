@@ -26,11 +26,15 @@ public:
 	bool getStateFight()const;
 	sf::FloatRect getTerritory() { return territory; }
 	void setHunger();
+	static void crossBridge(float yCoordinate);
+
 private:
+	static bool hasBridgeTarget;
 	sf::Texture throngleTexture;
 	sf::Sprite throngleSprite;
 	sf::IntRect rectSource;
 	sf::Clock animClock;
+	static float bridgeYpos;
 	float timererFrame = 0.1f;
 	int currentFrame = 0;
 	int animRow = 0;

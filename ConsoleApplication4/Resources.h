@@ -6,7 +6,9 @@ class Resources
 private:
     sf::Font& sharedFont;
     sf::String label;
+    sf::VideoMode desktop_Size = sf::VideoMode::getDesktopMode();
 public:
+    void scaleSprite(sf::RenderWindow& window);
     sf::RectangleShape Overlay;
     sf::Texture backgroundTexture;
     sf::Texture simTexture;

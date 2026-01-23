@@ -1,4 +1,5 @@
 ﻿#include "Throngle.h"
+#include "Ground.h"
 #include <iostream>
 Throngle::Throngle(int familyId,sf::FloatRect territory, sf::Vector2f size, float startHunger):throngleSprite(throngleTexture){
 	if (!throngleTexture.loadFromFile("assets/throngleA.png")) {
@@ -50,14 +51,9 @@ void Throngle::move(float moveToX, float moveToY) {
 	float tempPosx = currentPosition.x + moveToX;
 	float tempPosy = currentPosition.y + moveToY;
 
-	if (tempPosx >= 0 && tempPosx <= 1600) {
-		currentPosition.x += moveToX;
-	}
-	if (tempPosy >= 0 && tempPosy <= 800) {
-		currentPosition.y += moveToY;
-	}
-	hitbox.setPosition(currentPosition);
-	throngleSprite.setPosition(currentPosition);
+
+	hitbox.setPosition({tempPosx, tempPosy});
+	throngleSprite.setPosition({ tempPosx, tempPosy });
 }
 
 void Throngle::wasEatenFunc() {
@@ -98,34 +94,41 @@ void Throngle::setHunger() {
 }
 void Throngle::update(float dt, bool canFight) {
 	//std::cout << " czy ten throngle moze walczyc " << canFight <<  "\n";
-	
-	if (canFight == true) {
-		if (checkifEnemyPosition(familyId))
-		{
-			m_state = State::Fight;
-
-		}
-	}
 	m_changeDirectionTimer -= dt;
-	
+
+	if (canFight == true&& hasBridgeTarget) {
+		
+			m_state = State::Fight;
+			float missingY = bridgeYpos - hitbox.getPosition().y;
+			float dirX = (rand() % 201 - 100) / 100.0f;
+			float dirY = 0.0f;
+			if (missingY > 2.0f) dirY = 1.0f;
+			else if (missingY < -2.0f) dirY = -1.0f;
+			else dirY = 0;
+			m_velocity = sf::Vector2f(dirX, dirY);
+	}
+	else {
+		
 	if (m_changeDirectionTimer <= -1) {
 		float dirX = (rand() % 201 - 100) / 100.0f;
 		float dirY = (rand() % 201 - 100) / 100.0f;
 		m_velocity = sf::Vector2f(dirX, dirY);
 		m_changeDirectionTimer = 1.0f + ((rand() % 200) / 100.0f);
+		}
 	}
 	this->move(m_velocity.x * m_speed * dt, m_velocity.y * m_speed * dt);
+	
 }
 sf::Vector2f Throngle::throngleTerritoryPosition(int familyId) {
 	switch (familyId) {
 	case 0:  {
-		float randomPositionFamilyx = Resources::randomNumber(100, 800);
-		float randomPositionFamilyy = Resources::randomNumber(100, 800);
+		float randomPositionFamilyx = Resources::randomNumber(50, 600);
+		float randomPositionFamilyy = Resources::randomNumber(0, 1000);
 		return { randomPositionFamilyx,randomPositionFamilyy };
 	}
 	case 1: {
-		float randomPositionFamilyx = Resources::randomNumber(800, 1550);
-		float randomPositionFamilyy = Resources::randomNumber(100, 850);
+		float randomPositionFamilyx = Resources::randomNumber(1100, 1800);
+		float randomPositionFamilyy = Resources::randomNumber(0, 1000);
 		return { randomPositionFamilyx,randomPositionFamilyy };
 	}
 	}
@@ -133,8 +136,8 @@ sf::Vector2f Throngle::throngleTerritoryPosition(int familyId) {
 
 bool Throngle::checkifEnemyPosition(int familyId) {
 
-
 	sf::Vector2f myPos = hitbox.getPosition();
+
 
 	if (territory.contains(myPos)) {
 		return false;
@@ -150,4 +153,10 @@ bool Throngle::getStateFight()const {
 	else {
 		return false;
 	}
+}
+float Throngle::bridgeYpos = 0.0f;
+bool Throngle::hasBridgeTarget = false;
+void Throngle::crossBridge(float yCoordinate){
+	bridgeYpos = yCoordinate;
+	hasBridgeTarget = true;
 }

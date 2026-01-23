@@ -2,19 +2,20 @@
 #include "Resources.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "Throngle.h"
 
 
-
-    Game::Game():m_resources(m_globalfont), fightSprite(fightSpriteTexture) {
+    Game::Game():m_resources(m_globalfont), fightSprite(fightSpriteTexture){
         if (!m_globalfont.openFromFile("assets/ARIAL.ttf") || !fightSpriteTexture.loadFromFile("assets/miecze.png")) {
             std::exit(1);
         }
         fightSprite.setTexture(fightSpriteTexture, true);
         m_resources.menuButton.centerText();
-        window.create(sf::VideoMode({ 1600, 900 }), "Chmara");
+        //window.create(sf::VideoMode({1600,900}), "Chmara", sf::State::Fullscreen);
+        window.create(sf::VideoMode::getDesktopMode(), "Chmara", sf::State::Fullscreen);
+        m_resources.scaleSprite(window);
         window.setFramerateLimit(60);
         m_state = GameState::MENU;
-        apples.emplace_back(m_ground.returnFreeTile()); //stworzenie pierwszego jablka
         
     }
 
@@ -77,11 +78,15 @@
                                 if (options[i] == 2) {
                                     std::cout << "test tryb numer dwa";
                                     world_config.mode = gameMode::twoVillages;
+                                    m_ground.init(window.getSize().x, window.getSize().y,false);
+                                    apples.emplace_back(m_ground.returnFreeTile());
                                     throngles.push_back(std::make_unique<Throngle>(0,setTerritory(0)));
                                     throngles.push_back(std::make_unique<Throngle>(1, setTerritory(1)));
                                 }
                                 else {
                                     world_config.mode = gameMode::oneVillage;
+                                    m_ground.init(window.getSize().x, window.getSize().y,true);
+                                    apples.emplace_back(m_ground.returnFreeTile());
                                     throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
                                 }
                                 
@@ -187,21 +192,24 @@
 
     void Game::spawnApples(float totalSimTime) {
        
-       if (apples.size() < 60- totalSimTime) {
+       if (apples.size() < 100- totalSimTime) {
            for (int i = 0; i < Resources::randomNumber(0, 5); i++) {
                apples.emplace_back(m_ground.returnFreeTile());
                std::cout << apples.size()<<"\n";
            }
        }
-       if (apples.size() < 40 && world_config.mode== gameMode::twoVillages && totalSimTime >12.0f) {
+       if (apples.size() < 70 && world_config.mode== gameMode::twoVillages && totalSimTime >12.0f && !canFight ) {
            canFight = true;
+           //tutaj chyba dodac 
+           float bridgePos = m_ground.getBridgeCenterY();
+           Throngle::crossBridge(bridgePos);
        }
     
     }
     void Game::handleFight() {
         if (canFight == true) {
             for (auto& throngle : throngles) {
-                
+            
                 for (auto& throngleSecond : throngles) {
                     
                     if (&throngle == &throngleSecond || throngle->familyIdGet() == throngleSecond->familyIdGet()) {
@@ -231,7 +239,7 @@
             bool wasEaten = false;
             for (auto& throngle : throngles) {
 
-                if (throngle->getBounds().findIntersection(it->getBounds())&& !throngle->getStateFight())
+                if (throngle->getBounds().findIntersection(it->getBounds()))
                 {
                     sf::Vector2f eatenPosition = it->getPosition();
                     m_ground.ReleasePosition(eatenPosition);
@@ -272,7 +280,7 @@
             for (auto& throngle : throngles) {
 
                 throngle->update(dtSeconds, canFight);
-
+                
                 if (logicTic) {
                     if (throngles.size() < 70) {
                         if (throngle->reproduction() == true)
@@ -305,6 +313,7 @@
         throngles.clear();
         apples.clear();
         totalSimTime =0;
+        canFight = false;
         m_state = GameState::SIMULATION;
         if (world_config.mode ==gameMode::twoVillages) {
             throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));

@@ -8,16 +8,27 @@ struct Tile {
 };
 class Ground
 {
-	const int TILE_SIZE = 50;
-	const int PADDING = 50;
-	const int SCREEN_WIDTH = 1600;
-	const int SCREEN_HEIGHT = 900;
-	int columns = (SCREEN_WIDTH - (2 * PADDING)) / TILE_SIZE; 
-	int rows = (SCREEN_HEIGHT - (2 * PADDING)) / TILE_SIZE;
+    const int TILE_SIZE = 50;
 	
+    unsigned int screenWidth;
+    unsigned int screenHeight;
+    int columns;
+    int rows;
+    float startX;
+    float startY;
+
+    int centerCol;
+    int gapStartCol;
+    int gapEndCol;
 	std::vector<Tile>vectorTiles;
+
+	int bridgeStart;
+	int bridgeEnd;
+
 public:
+	float getBridgeCenterY() const;
 	void update(float dt);
+	void init(unsigned int screenwidth, unsigned int screenheight, bool singleGame);
 	void ReleasePosition(sf::Vector2f eatenPosition);
 	Ground();
 	void render(sf::RenderWindow& window);
