@@ -46,14 +46,43 @@ void Throngle::hungerIncrease() {
 	}
 	}
 void Throngle::move(float moveToX, float moveToY) {
-
 	sf::Vector2f currentPosition = hitbox.getPosition();
-	float tempPosx = currentPosition.x + moveToX;
-	float tempPosy = currentPosition.y + moveToY;
+	float nextX = currentPosition.x + moveToX;
+	float nextY = currentPosition.y + moveToY;
 
+	float screenW = static_cast<float>(desktop_Size.size.x);
+	float screenH = static_cast<float>(desktop_Size.size.y);
+	std::cout << screenW;
+	if (nextX < screenH*0.05) nextX = screenH*0.05;
+	if (nextX > screenW*0.95) nextX = screenW*0.95;
+	if (nextY < screenH*0.05) nextY = screenH*0.05;
+	if (nextY > screenH*0.95) nextY = screenH*0.95;
 
-	hitbox.setPosition({tempPosx, tempPosy});
-	throngleSprite.setPosition({ tempPosx, tempPosy });
+	float gapWidth = screenW * 0.3f;
+	float centerX = screenW / 2.0f;
+	
+	float cliffLeft = centerX - (gapWidth / 2.0f);
+	float cliffRight = centerX + (gapWidth / 2.0f);
+
+	float bridgeHeight = 250.0f;
+	float centerY = screenH / 2.0f;
+	float bridgeTop = centerY - (bridgeHeight / 2.0f);
+	float bridgeBottom = centerY + (bridgeHeight / 2.0f);
+
+	bool isInsideGapX = (nextX > cliffLeft && nextX < cliffRight);
+	bool isOutsideBridgeY = (nextY < bridgeTop || nextY > bridgeBottom);
+//	std::cout << isInsideGapX << std::endl;
+	if (isInsideGapX && isOutsideBridgeY) {
+		if (nextX < centerX) {
+			nextX = cliffLeft;
+		}
+		else {
+			nextX = cliffRight;
+		}
+	}
+
+	hitbox.setPosition({ nextX, nextY });
+	throngleSprite.setPosition({ nextX, nextY });
 }
 
 void Throngle::wasEatenFunc() {
@@ -76,14 +105,15 @@ void Throngle::eat() {
 }
 void Throngle::grow() {
 	sf::Vector2f currSize =hitbox.getSize();
-	currSize.x += 15;
-	currSize.y += 10;
-	sf::Vector2f textureSize;
-	textureSize.x = static_cast<float>(throngleSprite.getTextureRect().size.x);
-	textureSize.y = static_cast<float>(throngleSprite.getTextureRect().size.y);
-	throngleSprite.setScale({currSize.x / textureSize.x , currSize.y / textureSize.y });
-	hitbox.setSize(currSize);
-
+	currSize.x *= 1.1;
+	currSize.y *= 1.05;
+	
+		sf::Vector2f textureSize;
+		textureSize.x = static_cast<float>(throngleSprite.getTextureRect().size.x);
+		textureSize.y = static_cast<float>(throngleSprite.getTextureRect().size.y);
+		throngleSprite.setScale({ currSize.x / textureSize.x , currSize.y / textureSize.y });
+		hitbox.setSize(currSize);
+	
 }
 
 sf::FloatRect Throngle::getBounds() {
@@ -100,17 +130,14 @@ void Throngle::update(float dt, bool canFight) {
 		
 			m_state = State::Fight;
 			float missingY = bridgeYpos - hitbox.getPosition().y;
-			float dirX;
-			if (familyId == 0) {
-				 dirX = 1.0f; 
-			}
-			else {
-				 dirX = -1.0f; 
-			}
+			float dirX = 0;
+
 			float dirY = 0.0f;
-			if (missingY > 2.0f) dirY = 1.0f;
-			else if (missingY < -2.0f) dirY = -1.0f;
-			else dirY = 0;
+			if (std::abs(missingY) > 10) {
+				dirY = (missingY > 0) ? 1.0f : -1.0f;
+				dirX = (rand() % 201 - 100) / 100;
+
+			}
 			m_velocity = sf::Vector2f(dirX, dirY);
 	}
 	else {
@@ -126,15 +153,22 @@ void Throngle::update(float dt, bool canFight) {
 	
 }
 sf::Vector2f Throngle::throngleTerritoryPosition(int familyId) {
+	float firstFamilyS = desktop_Size.size.x * 0.07;
+	float firstFamilyE = desktop_Size.size.x * 0.3;
+	float secondFamilyS = desktop_Size.size.x * 0.7;
+	float secondFamilyE = desktop_Size.size.x * 0.9;
+
+	float yAxis = desktop_Size.size.y * 0.7;
+
 	switch (familyId) {
 	case 0:  {
-		float randomPositionFamilyx = Resources::randomNumber(50, 600);
-		float randomPositionFamilyy = Resources::randomNumber(0, 1000);
+		float randomPositionFamilyx = Resources::randomNumber(firstFamilyS, firstFamilyE);
+		float randomPositionFamilyy = Resources::randomNumber(50, yAxis);
 		return { randomPositionFamilyx,randomPositionFamilyy };
 	}
 	case 1: {
-		float randomPositionFamilyx = Resources::randomNumber(1100, 1800);
-		float randomPositionFamilyy = Resources::randomNumber(0, 1000);
+		float randomPositionFamilyx = Resources::randomNumber(secondFamilyS, secondFamilyE);
+		float randomPositionFamilyy = Resources::randomNumber(5, yAxis);
 		return { randomPositionFamilyx,randomPositionFamilyy };
 	}
 	}

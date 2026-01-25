@@ -5,7 +5,7 @@
 
 //klasa odpowiedzialna za przyciski załadowanie tła...
 //na ten moment tutaj tworze przyciski
-Resources::Resources(sf::Font& font) :sharedFont(font), menuButton(font, "Nowa Gra", {750.f, 580.f}, {200.f, 50.f}), backgroundMainMenu(backgroundTexture), backgroundSimulation(simTexture) {
+Resources::Resources(sf::Font& font) :sharedFont(font), menuButton(font, "Nowa Gra", { (float)desktop_Size.size.x/2,(float)desktop_Size.size.y/2}, {200.f, 50.f}), backgroundMainMenu(backgroundTexture), backgroundSimulation(simTexture) {
 
 
     if (!backgroundTexture.loadFromFile("assets/background.png")) {
@@ -48,7 +48,7 @@ void Resources::simMenu(sf::RenderWindow& window) {
     Overlay.setFillColor(sf::Color(0, 0, 0, 100));
     window.draw(Overlay);
     simStopButtons.clear();
-    float startY = 580.f;
+    float startY = screenHeight/2 + 100;
     std::vector<int> options = { 1, 2, 3 };
     for (int optionValue : options) {
         if (optionValue == 1) {
@@ -63,7 +63,7 @@ void Resources::simMenu(sf::RenderWindow& window) {
             label = L"Wróc do gry";
 
         }
-        simStopButtons.emplace_back(sharedFont, label, sf::Vector2f{ 800.f, startY }, sf::Vector2f{ 150.f, 50.f });
+        simStopButtons.emplace_back(sharedFont, label, sf::Vector2f{ screenWidth/2, startY }, sf::Vector2f{ 150.f, 50.f });
        
         startY -= 100.f;
     }
@@ -71,7 +71,9 @@ void Resources::simMenu(sf::RenderWindow& window) {
 
 void Resources::configPanel()
 {
-    float startX = 950.f;
+    float screenWidth = (float)desktop_Size.size.x;
+    float screenHeight = (float)desktop_Size.size.y;
+    float startX = screenWidth/2;
    
     configButtons.clear();
     std::vector<int> options = { 1, 2};
@@ -83,7 +85,7 @@ void Resources::configPanel()
             label = std::to_string(optionValue) + " osada";
         }
 
-        configButtons.emplace_back(sharedFont, label, sf::Vector2f{ startX, 580.f }, sf::Vector2f{ 100.f, 50.f });
+        configButtons.emplace_back(sharedFont, label, sf::Vector2f{ startX, screenHeight/2 }, sf::Vector2f{ 100.f, 50.f });
         startX -= 200;
     }
   

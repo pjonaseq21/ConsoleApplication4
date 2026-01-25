@@ -27,6 +27,7 @@ public:
 	sf::FloatRect getTerritory() { return territory; }
 	void setHunger();
 	static void crossBridge(float yCoordinate);
+	sf::VideoMode desktop_Size = sf::VideoMode::getDesktopMode();
 
 private:
 	static bool hasBridgeTarget;
