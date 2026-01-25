@@ -100,7 +100,13 @@ void Throngle::update(float dt, bool canFight) {
 		
 			m_state = State::Fight;
 			float missingY = bridgeYpos - hitbox.getPosition().y;
-			float dirX = (rand() % 201 - 100) / 100.0f;
+			float dirX;
+			if (familyId == 0) {
+				 dirX = 1.0f; 
+			}
+			else {
+				 dirX = -1.0f; 
+			}
 			float dirY = 0.0f;
 			if (missingY > 2.0f) dirY = 1.0f;
 			else if (missingY < -2.0f) dirY = -1.0f;
