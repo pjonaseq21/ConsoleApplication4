@@ -6,6 +6,7 @@ class Resources
 private:
     sf::Font& sharedFont;
     sf::String label;
+    sf::Text endGameText;
     sf::VideoMode desktop_Size = sf::VideoMode::getDesktopMode();
 public:
     void scaleSprite(sf::RenderWindow& window);
@@ -19,7 +20,9 @@ public:
     sf::Sprite backgroundSimulation;
     Button menuButton;
     std::vector<Button> configButtons;
+    Button simEndButton;
     std::vector<Button> simStopButtons;
+    void endGamePanel(sf::RenderWindow& window,int winningFamily);
     static float randomNumber(float x1, float x2);
 
 };

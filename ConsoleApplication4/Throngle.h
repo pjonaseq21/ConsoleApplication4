@@ -10,10 +10,10 @@ public:
 		Starve,
 		Replicate,
 	};
-	Throngle(int familyId, sf::FloatRect territory, sf::Vector2f size = { 32, 32.f }, float startHunger = 0.3f);
+	Throngle(int familyId, sf::FloatRect territory, sf::Vector2f size = { 32, 32.f }, float startHunger = 1);
 	void render(sf::RenderWindow& window);
 	void move(float moveToX, float moveToY);
-	void hungerIncrease();
+	void hungerDecrease();
 	bool reproduction();
 	void update(float dt, bool canFight);
 	sf::Vector2f getPosition()const;
@@ -28,6 +28,7 @@ public:
 	void setHunger();
 	static void crossBridge(float yCoordinate);
 	sf::VideoMode desktop_Size = sf::VideoMode::getDesktopMode();
+	void setHungerFight();
 
 private:
 	static bool hasBridgeTarget;
@@ -46,9 +47,9 @@ private:
 	sf::RectangleShape hitbox;
 	float m_hunger;
 	float m_changeDirectionTimer = 0.0f;
-	float m_speed= 20.0f;
+	float m_speed= 40.0f;
 	sf::Vector2f m_velocity;
-	void grow();
+	void adjustSize();
 	bool wasEatenThrongle = false;
 	sf::Vector2f throngleTerritoryPosition(int familyId);
 

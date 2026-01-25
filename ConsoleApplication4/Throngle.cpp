@@ -33,17 +33,9 @@ void Throngle::render(sf::RenderWindow& window)
 
 }
 //zmienic nazwe funkcji bo nie oznacza tego nawet, to ma zwiekszac glod
-void Throngle::hungerIncrease() {
-	if (wasEatenThrongle) {
-		sf::Vector2f currSize = hitbox.getSize();
-		currSize.x = currSize.x * 0.999;
-		currSize.y = currSize.y * 0.999;
-		hitbox.setSize(currSize);
-	}
-	else {
-		m_hunger -= 0.01;
-		m_speed += 1.5;
-	}
+void Throngle::hungerDecrease() {
+		m_hunger -= 0.03;
+		m_speed += 7;
 	}
 void Throngle::move(float moveToX, float moveToY) {
 	sf::Vector2f currentPosition = hitbox.getPosition();
@@ -52,7 +44,7 @@ void Throngle::move(float moveToX, float moveToY) {
 
 	float screenW = static_cast<float>(desktop_Size.size.x);
 	float screenH = static_cast<float>(desktop_Size.size.y);
-	std::cout << screenW;
+
 	if (nextX < screenH*0.05) nextX = screenH*0.05;
 	if (nextX > screenW*0.95) nextX = screenW*0.95;
 	if (nextY < screenH*0.05) nextY = screenH*0.05;
@@ -70,15 +62,10 @@ void Throngle::move(float moveToX, float moveToY) {
 	float bridgeBottom = centerY + (bridgeHeight / 2.0f);
 
 	bool isInsideGapX = (nextX > cliffLeft && nextX < cliffRight);
-	bool isOutsideBridgeY = (nextY < bridgeTop || nextY > bridgeBottom);
-//	std::cout << isInsideGapX << std::endl;
-	if (isInsideGapX && isOutsideBridgeY) {
-		if (nextX < centerX) {
-			nextX = cliffLeft;
-		}
-		else {
-			nextX = cliffRight;
-		}
+
+	if (isInsideGapX && !hasBridgeTarget) {
+		if (nextX < centerX) nextX = cliffLeft;
+		else nextX = cliffRight;
 	}
 
 	hitbox.setPosition({ nextX, nextY });
@@ -90,43 +77,51 @@ void Throngle::wasEatenFunc() {
 }
 
 bool Throngle::reproduction() {
-	//std::cout << m_hunger<<" glod   \n ";
-	if (m_hunger >= 0.4f)
+	if (m_hunger >= 1.1)
 	{
-		m_hunger = 0.2f;
+		m_hunger = 1;
+		adjustSize();
 		return true;
 	}
 	return false;
 }
 void Throngle::eat() {
-	m_hunger += 0.5;
-	grow();
+	if(m_hunger <2.0f) m_hunger += 0.2;
+	adjustSize();
 
 }
-void Throngle::grow() {
+void Throngle::adjustSize() {
 	sf::Vector2f currSize =hitbox.getSize();
-	currSize.x *= 1.1;
-	currSize.y *= 1.05;
-	
-		sf::Vector2f textureSize;
-		textureSize.x = static_cast<float>(throngleSprite.getTextureRect().size.x);
-		textureSize.y = static_cast<float>(throngleSprite.getTextureRect().size.y);
-		throngleSprite.setScale({ currSize.x / textureSize.x , currSize.y / textureSize.y });
-		hitbox.setSize(currSize);
+	if (m_hunger > 1) {
+		float tempVar = 32 * m_hunger;
+		if (tempVar < 10) tempVar = 10;
+		if (tempVar > 60) tempVar = 60;
+
+		currSize.x = tempVar;
+		currSize.y = tempVar;
+	}
+	sf::Vector2f textureSize;
+	textureSize.x = static_cast<float>(throngleSprite.getTextureRect().size.x);
+	textureSize.y = static_cast<float>(throngleSprite.getTextureRect().size.y);
+	throngleSprite.setScale({ currSize.x / textureSize.x , currSize.y / textureSize.y });
+	hitbox.setSize(currSize);
 	
 }
 
 sf::FloatRect Throngle::getBounds() {
 	return hitbox.getGlobalBounds();
 }
+//funkcja majaca na celu oslabiac potworka ktory walczy tak zeby nie tworzyc gladiatorow
+void Throngle::setHungerFight() {
+	m_hunger -= 0.1f;
+}
 void Throngle::setHunger() {
 	m_hunger = -15;
 }
 void Throngle::update(float dt, bool canFight) {
-	//std::cout << " czy ten throngle moze walczyc " << canFight <<  "\n";
+	adjustSize();
 	m_changeDirectionTimer -= dt;
-
-	if (canFight == true&& hasBridgeTarget) {
+	if (canFight == true) {
 		
 			m_state = State::Fight;
 			float missingY = bridgeYpos - hitbox.getPosition().y;
@@ -136,7 +131,10 @@ void Throngle::update(float dt, bool canFight) {
 			if (std::abs(missingY) > 10) {
 				dirY = (missingY > 0) ? 1.0f : -1.0f;
 				dirX = (rand() % 201 - 100) / 100;
-
+			
+			}
+			else {
+				 dirX = 3 - (6 * familyId);
 			}
 			m_velocity = sf::Vector2f(dirX, dirY);
 	}

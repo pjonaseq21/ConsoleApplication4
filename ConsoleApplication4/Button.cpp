@@ -35,6 +35,7 @@ Button::Button(sf::Font& font, sf::String text, sf::Vector2f position, sf::Vecto
 
 void Button::render(sf::RenderWindow& window) {
 	window.draw(button);
+	centerText();
 	window.draw(buttonText);
 }
 

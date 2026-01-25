@@ -8,7 +8,7 @@ Ground::Ground() {
 	screenHeight = 0;
 }
 void Ground::init(unsigned int screenwidth, unsigned int  screenheight,bool singleGame) {
-
+	vectorTiles.clear();
 	unsigned int screenWidth = screenwidth;
 	unsigned int screenHeight= screenheight;
 	columns = (screenWidth ) / TILE_SIZE;
@@ -99,7 +99,7 @@ void Ground::ReleasePosition(sf::Vector2f EatenPosition) {
 		
 		if (std::abs(vectorTiles[i].worldPos.x-EatenPosition.x) <1.0f && std::abs(vectorTiles[i].worldPos.y - EatenPosition.y) <1.0f) {
 			vectorTiles[i].isOccupied = false;
-			vectorTiles[i].cooldown = 4.0f;
+			vectorTiles[i].cooldown = 8.0f;
 
 		}
 		else {
@@ -111,7 +111,7 @@ void Ground::ReleasePosition(sf::Vector2f EatenPosition) {
 void Ground::render(sf::RenderWindow& window) {
 	sf::RectangleShape debugShape(sf::Vector2f(TILE_SIZE, TILE_SIZE));
 	debugShape.setFillColor(sf::Color::Transparent);
-	debugShape.setOutlineThickness(1.0f);
+	debugShape.setOutlineThickness(2.0f);
 
 	for (auto& tile : vectorTiles) {
 		debugShape.setPosition(tile.worldPos);

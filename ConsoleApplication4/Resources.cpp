@@ -5,8 +5,16 @@
 
 //klasa odpowiedzialna za przyciski załadowanie tła...
 //na ten moment tutaj tworze przyciski
-Resources::Resources(sf::Font& font) :sharedFont(font), menuButton(font, "Nowa Gra", { (float)desktop_Size.size.x/2,(float)desktop_Size.size.y/2}, {200.f, 50.f}), backgroundMainMenu(backgroundTexture), backgroundSimulation(simTexture) {
+Resources::Resources(sf::Font& font) :sharedFont(font), menuButton(font, "Nowa Gra", { (float)desktop_Size.size.x / 2,(float)desktop_Size.size.y / 2 }, { 200.f, 50.f }), 
+backgroundMainMenu(backgroundTexture), backgroundSimulation(simTexture), 
+simEndButton(font, "Zrestartuj Gre", { (float)desktop_Size.size.x / 2,(float)desktop_Size.size.y / 2 }, { 150.f, 50.f }), endGameText(font){
 
+
+    endGameText.setFont(sharedFont);
+    endGameText.setCharacterSize(60);
+    endGameText.setFillColor(sf::Color::White);
+    endGameText.setOutlineColor(sf::Color::Black);
+    endGameText.setOutlineThickness(3.0f);
 
     if (!backgroundTexture.loadFromFile("assets/background.png")) {
         std::cerr << "BLAD: Nie udalo sie zaladowac tekstury!" << std::endl;
@@ -69,11 +77,32 @@ void Resources::simMenu(sf::RenderWindow& window) {
     }
 }
 
+void Resources::endGamePanel(sf::RenderWindow& window,int winningFamily) {
+    float screenWidth = (float)desktop_Size.size.x;
+    float screenHeight = (float)desktop_Size.size.y;
+    Overlay.setSize({ screenWidth,screenHeight });
+    Overlay.setFillColor(sf::Color(0, 0, 0, 100));
+    window.draw(Overlay);
+    switch (winningFamily) {
+    case 0: 
+        endGameText.setString(L"wygrała rodzina żółtych");
+        break;
+
+    case 1:
+        endGameText.setString(L"wygrala rodzina czerwonych");
+
+        break;
+    }
+    endGameText.setPosition(sf::Vector2f((screenWidth/2)-250.f, (screenHeight/2  - 150.0f)));
+    window.draw(endGameText);
+}
+
+
 void Resources::configPanel()
 {
     float screenWidth = (float)desktop_Size.size.x;
     float screenHeight = (float)desktop_Size.size.y;
-    float startX = screenWidth/2;
+    float startX = screenWidth/2 +50;
    
     configButtons.clear();
     std::vector<int> options = { 1, 2};
@@ -86,7 +115,7 @@ void Resources::configPanel()
         }
 
         configButtons.emplace_back(sharedFont, label, sf::Vector2f{ startX, screenHeight/2 }, sf::Vector2f{ 100.f, 50.f });
-        startX -= 200;
+        startX -= 150;
     }
   
 

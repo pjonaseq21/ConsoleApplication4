@@ -11,6 +11,7 @@ enum class GameState {
     MENU,
     SIMULATION,
     SIMULATION_MENU,
+    SIMULATION_END,
     CONFIG,
     GAME_OVER
 };
@@ -21,6 +22,9 @@ public:
     void run(); 
 
 private:
+    int countFamily_one = 0;
+    int countFamily_two = 0;
+    int winningFamily;
     sf::Clock clock;
     sf::Clock fightClock;
     void handleFight();
@@ -39,6 +43,7 @@ private:
     Resources m_resources;
     sf::RenderWindow window;
     std::vector<std::unique_ptr<Throngle>> throngles;
+    void endGame(float totalSimTime);
     void spawnThrongles(bool logicTic, float dtSeconds, std::vector<std::unique_ptr<Throngle>>& newBabies);
     float m_timer;
     std::vector<Apple> apples;
