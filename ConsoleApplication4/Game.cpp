@@ -60,13 +60,14 @@ Game::Game() :m_resources(m_globalfont), fightSprite(fightSpriteTexture) {
 
 
                     }
-                    if (m_state == GameState::MENU) { //czy klikniecie znajduje sie w pozycji przycisku
+                    if (m_state == GameState::MENU) { 
                   
                         if (m_resources.menuButton.isClicked(mousePos)) {
                              m_resources.configPanel();
                              m_state = GameState::CONFIG;
                              return;
                         }
+
                     
                   
                     }
@@ -183,7 +184,7 @@ Game::Game() :m_resources(m_globalfont), fightSprite(fightSpriteTexture) {
         if (m_state == GameState::MENU) {
             window.draw(m_resources.backgroundMainMenu);
             m_resources.menuButton.render(window);
-
+            m_resources.menuButtonEnd.render(window);
         }
         else if (m_state == GameState::CONFIG) {
              window.draw(m_resources.backgroundMainMenu);
@@ -233,15 +234,14 @@ Game::Game() :m_resources(m_globalfont), fightSprite(fightSpriteTexture) {
 
     //manipulacja iloscia jablek
     void Game::spawnApples(float totalSimTime,bool force) {
-       if (apples.size() < 40- totalSimTime||force) {
+       if (apples.size() < 100- totalSimTime||force) {
            int count = force ? 2 : Resources::randomNumber(0, 5);
            for (int i = 0; i < count; i++) {
                apples.emplace_back(m_ground.returnFreeTile(),m_resources.appleTexture);
            }
        }
-       if (apples.size() < 20 && world_config.mode== gameMode::twoVillages && totalSimTime >12 && !canFight ) {
+       if (apples.size() < 80 && world_config.mode== gameMode::twoVillages && totalSimTime >8 && !canFight ) {
            canFight = true;
-           //tutaj chyba dodac 
            float bridgePos = m_ground.getBridgeCenterY();
            Throngle::crossBridge(bridgePos);
        }

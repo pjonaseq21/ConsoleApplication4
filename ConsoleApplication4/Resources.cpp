@@ -7,6 +7,7 @@
 Resources::Resources(sf::Font& font)
     : sharedFont(font),
     menuButton(font, "Nowa Gra", { Game::WIDTH / 2.0f, Game::HEIGHT / 2.0f }, { 200.f, 50.f }),
+    menuButtonEnd(font, L"Wyjdź", { Game::WIDTH / 2.0f , Game::HEIGHT / 2.0f + 120.f }, { 200.f, 50.f }),
     backgroundMainMenu(backgroundTexture),
     backgroundSimulation(simTexture),
     simEndButton(font, "Zrestartuj Gre", { Game::WIDTH / 2.0f, Game::HEIGHT / 2.0f }, { 150.f, 50.f }),
@@ -75,7 +76,7 @@ Resources::Resources(sf::Font& font)
         backgroundMainMenu.setTexture(backgroundTexture, true);
     }
 
-    if (!simTexture.loadFromFile("assets/unnamed.png")) {
+    if (!simTexture.loadFromFile("assets/sim_background2.png")) {
         std::cerr << "BLAD: Nie udalo sie zaladowac tekstury!" << std::endl;
     }
     else {
@@ -106,7 +107,6 @@ void Resources::scaleSprite(sf::RenderWindow& window) {
 }
 
 void Resources::simMenu(sf::RenderWindow& window) {
-    // Overlay na cały wirtualny ekran
     Overlay.setSize({ Game::WIDTH, Game::HEIGHT });
     Overlay.setFillColor(sf::Color(0, 0, 0, 100));
     window.draw(Overlay);
@@ -132,22 +132,21 @@ void Resources::simMenu(sf::RenderWindow& window) {
 }
 
 void Resources::endGamePanel(sf::RenderWindow& window, int winningFamily) {
-    // Overlay na cały wirtualny ekran
+    // overlay na cały wirtualny ekran
     Overlay.setSize({ Game::WIDTH, Game::HEIGHT });
     Overlay.setFillColor(sf::Color(0, 0, 0, 100));
     window.draw(Overlay);
 
     switch (winningFamily) {
     case 0:
-        endGameText.setString(L"wygrała rodzina żółtych");
+        endGameText.setString(L"Wygrała rodzina żółtych");
         break;
 
     case 1:
-        endGameText.setString(L"wygrała rodzina czerwonych");
+        endGameText.setString(L"Wygrała rodzina czerwonych");
         break;
     }
 
-    // Centrowanie tekstu
     endGameText.setPosition(sf::Vector2f((Game::WIDTH / 2.0f) - 250.f, (Game::HEIGHT / 2.0f - 150.0f)));
     window.draw(endGameText);
 }

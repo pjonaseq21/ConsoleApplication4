@@ -99,7 +99,7 @@ void Ground::ReleasePosition(sf::Vector2f EatenPosition) {
 		
 		if (std::abs(vectorTiles[i].worldPos.x-EatenPosition.x) <1.0f && std::abs(vectorTiles[i].worldPos.y - EatenPosition.y) <1.0f) {
 			vectorTiles[i].isOccupied = false;
-			vectorTiles[i].cooldown = 8.0f;
+			vectorTiles[i].cooldown = 4.0f;
 
 		}
 		else {

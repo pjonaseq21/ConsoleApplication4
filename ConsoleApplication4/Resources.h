@@ -29,6 +29,7 @@ public:
     sf::Sprite backgroundMainMenu;
     sf::Sprite backgroundSimulation;
     Button menuButton;
+    Button menuButtonEnd;
     std::vector<Button> configButtons;
     Button simEndButton;
     std::vector<Button> simStopButtons;
