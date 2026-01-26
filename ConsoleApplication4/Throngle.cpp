@@ -77,35 +77,40 @@ void Throngle::wasEatenFunc() {
 }
 
 bool Throngle::reproduction() {
+	float birthCost = 0.3f;
 	if (m_hunger >= 1.1)
 	{
-		m_hunger = 1;
+		m_hunger -= birthCost;
 		adjustSize();
 		return true;
 	}
 	return false;
 }
 void Throngle::eat() {
-	if(m_hunger <2.0f) m_hunger += 0.2;
+	m_hunger += 0.2;
 	adjustSize();
 
 }
 void Throngle::adjustSize() {
 	sf::Vector2f currSize =hitbox.getSize();
-	if (m_hunger > 1) {
-		float tempVar = 32 * m_hunger;
-		if (tempVar < 10) tempVar = 10;
-		if (tempVar > 60) tempVar = 60;
+	float baseSize = 20.0f;
+	float addSize = 20.0f;
+	float tempVar = baseSize + (m_hunger * addSize);
+	if (tempVar > 80) tempVar = 60;
+	if (tempVar < 10) tempVar = 10;
 
-		currSize.x = tempVar;
-		currSize.y = tempVar;
-	}
+
+	currSize.x = tempVar;
+	currSize.y = tempVar;
+
 	sf::Vector2f textureSize;
 	textureSize.x = static_cast<float>(throngleSprite.getTextureRect().size.x);
 	textureSize.y = static_cast<float>(throngleSprite.getTextureRect().size.y);
 	throngleSprite.setScale({ currSize.x / textureSize.x , currSize.y / textureSize.y });
+	throngleSprite.setOrigin({ static_cast<float>(textureSize.x) / 2.0f, static_cast<float>(textureSize.y) / 2.0f });
+
 	hitbox.setSize(currSize);
-	
+	hitbox.setOrigin({ currSize.x / 2.0f, currSize.y / 2.0f });
 }
 
 sf::FloatRect Throngle::getBounds() {
@@ -198,3 +203,4 @@ void Throngle::crossBridge(float yCoordinate){
 	bridgeYpos = yCoordinate;
 	hasBridgeTarget = true;
 }
+

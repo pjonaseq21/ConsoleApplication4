@@ -11,7 +11,7 @@
         }
         fightSprite.setTexture(fightSpriteTexture, true);
         m_resources.menuButton.centerText();
-        //window.create(sf::VideoMode({1600,900}), "Chmara", sf::State::Fullscreen);
+        //window.create(sf::VideoMode({2500,1200}), "Chmara", sf::State::Fullscreen);
         window.create(sf::VideoMode::getDesktopMode(), "Chmara", sf::State::Fullscreen);
         m_resources.scaleSprite(window);
         window.setFramerateLimit(60);
@@ -38,6 +38,18 @@
             if (const auto* mousePress = event->getIf<sf::Event::MouseButtonPressed>()) { //sprawdzenie czy wcisnieto myszke
                 if (mousePress->button == sf::Mouse::Button::Left) { //sprawdzenie czy lewy przycisk klikniety
                     sf::Vector2f mousePos = window.mapPixelToCoords(mousePress->position);
+
+                    //przyciski w symulacji
+                    if (m_state == GameState::SIMULATION) {
+                        if (m_resources.speedUpSprite.getGlobalBounds().contains(mousePos)) {
+                            fastForward = !fastForward;
+                        }
+                        else if (m_resources.appleSpawnSprite.getGlobalBounds().contains(mousePos)) {
+                            spawnApples(totalSimTime,true);
+                            std::cout << "testowe klikniecie \n";
+
+                        }
+                    }
                     if (m_state == GameState::MENU) { //czy klikniecie znajduje sie w pozycji przycisku
                   
                         if (m_resources.menuButton.isClicked(mousePos)) {
@@ -133,11 +145,15 @@
                     bool logicTic = false;
                     float groundCooldown = 0.0f;
                     m_ground.update(dtSeconds);
+
+                    if (fastForward) {
+                        dtSeconds *= 3.0f; 
+                    }
                     if (m_timer > 0.5f) {
                         logicTic = true;
                         m_timer = 0.0f;
                     }
-                    spawnApples(totalSimTime);
+                    spawnApples(totalSimTime,false);
                     handleAppleEating();
                     handleDeadThrongles();
                     handleFight();
@@ -169,19 +185,25 @@
         
         else if (m_state == GameState::SIMULATION || m_state == GameState::SIMULATION_MENU || m_state == GameState::SIMULATION_END) {
           
-
             window.draw(m_resources.backgroundSimulation);
             m_ground.render(window);
+
             for (auto& throngle : throngles) {
                 throngle->render(window);
             }
+
             for (auto& apple : apples) {
                 apple.render(window);
             }
+
             if (fightSpriteBool && fightClock.getElapsedTime().asSeconds() > 2.0f)fightSpriteBool = false;
             if (fightSpriteBool == true) {
                 window.draw(fightSprite);
             }
+
+            window.draw(m_resources.speedUpSprite);
+            window.draw(m_resources.appleSpawnSprite);
+
             if (m_state == GameState::SIMULATION_END) {
                 m_resources.endGamePanel(window, winningFamily);
                 m_resources.simEndButton.render(window);
@@ -198,13 +220,14 @@
     }
 
     //manipulacja iloscia jablek
-    void Game::spawnApples(float totalSimTime) {
-       if (apples.size() < 120- totalSimTime) {
-           for (int i = 0; i < Resources::randomNumber(0, 5); i++) {
-               apples.emplace_back(m_ground.returnFreeTile());
+    void Game::spawnApples(float totalSimTime,bool force) {
+       if (apples.size() < 40- totalSimTime||force) {
+           int count = force ? 2 : Resources::randomNumber(0, 5);
+           for (int i = 0; i < count; i++) {
+               apples.emplace_back(m_ground.returnFreeTile(),m_resources.appleTexture);
            }
        }
-       if (apples.size() < 120 && world_config.mode== gameMode::twoVillages && totalSimTime >3 && !canFight ) {
+       if (apples.size() < 20 && world_config.mode== gameMode::twoVillages && totalSimTime >12 && !canFight ) {
            canFight = true;
            //tutaj chyba dodac 
            float bridgePos = m_ground.getBridgeCenterY();
@@ -229,12 +252,12 @@
                             fightClock.restart();
                             fightSpriteBool = true;
                             throngleSecond->setHunger();
-                            countFamily_one -= 1;
+               
                             throngle->setHungerFight();
                         }
                         else {
                             throngle->setHunger();
-                            countFamily_two -= 1;
+                           
                             throngleSecond->setHungerFight();
 
                         }
@@ -292,7 +315,7 @@
         }
     }
     void Game::spawnThrongles(bool logicTic,float dtSeconds, std::vector<std::unique_ptr<Throngle>>& newBabies) {
-        
+        int babyHunger = 0.8f;
             for (auto& throngle : throngles) {
                 throngle->update(dtSeconds, canFight);
                 
@@ -300,7 +323,9 @@
                     if (throngles.size() < 60) {
                         if (throngle->reproduction() == true)
                         {
-                            newBabies.push_back(std::make_unique<Throngle>(throngle->familyIdGet(), throngle->getTerritory()));
+                            newBabies.push_back(std::make_unique<Throngle>(throngle->familyIdGet(), throngle->getTerritory(), sf::Vector2f{64,64}, babyHunger));
+                            if (throngle->familyIdGet() == 0) countFamily_one++;
+                            else countFamily_two++;
                         }
                     }
                     //throngle->hungerDecrease();
@@ -328,20 +353,25 @@
         throngles.clear();
         apples.clear();
         totalSimTime =0;
+        countFamily_one = 0;
+        countFamily_two = 0;
+        fastForward = false;
         canFight = false;
         if (world_config.mode ==gameMode::twoVillages) {
             m_ground.init(window.getSize().x, window.getSize().y, false);
 
             throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
             throngles.push_back(std::make_unique<Throngle>(1, setTerritory(1)));
-            apples.emplace_back(m_ground.returnFreeTile());
+            countFamily_one += 1;
+            countFamily_two += 1;
+            apples.emplace_back(m_ground.returnFreeTile(),m_resources.appleTexture);
             
         }
         else {
             world_config.mode = gameMode::oneVillage;
             m_ground.init(window.getSize().x, window.getSize().y, true);
             throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
-            apples.emplace_back(m_ground.returnFreeTile());
+            apples.emplace_back(m_ground.returnFreeTile(),m_resources.appleTexture);
 
         }
 
@@ -350,27 +380,16 @@
 
     void Game::endGame(float totalSimTime) {
         if (world_config.mode==gameMode::twoVillages) {
-            countFamily_one = 0;
-            countFamily_two = 0;
 
-                for (auto& throngle : throngles) {
-                    if (throngle->familyIdGet() == 0) {
-                        countFamily_one +=1;
-                    }
-                    else if (throngle->familyIdGet() == 1) {
-                        countFamily_two += 1;
-                    }
-
-                }
-                if (totalSimTime > 10) {
-                    if (countFamily_one == 0) {
+                if (totalSimTime > 2) {
+                    if (countFamily_one <= 0) {
                         std::cout << " wygrala rodzina czerwona";
                         winningFamily = 1;
                         m_state = GameState::SIMULATION_END;
       
 
                     }
-                    else if (countFamily_two == 0) {
+                    else if (countFamily_two <= 0) {
                         std::cout << " wygrala rodzina żółta";
                         winningFamily = 0;
                         m_state = GameState::SIMULATION_END;

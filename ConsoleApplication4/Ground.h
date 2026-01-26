@@ -8,7 +8,6 @@ struct Tile {
 };
 class Ground
 {
-    const int TILE_SIZE = 50;
 	
     unsigned int screenWidth;
     unsigned int screenHeight;
@@ -26,6 +25,7 @@ class Ground
 	int bridgeEnd;
 
 public:
+	static const int TILE_SIZE = 50;
 	float getBridgeCenterY() const;
 	void update(float dt);
 	void init(unsigned int screenwidth, unsigned int screenheight, bool singleGame);

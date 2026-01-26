@@ -9,6 +9,12 @@ private:
     sf::Text endGameText;
     sf::VideoMode desktop_Size = sf::VideoMode::getDesktopMode();
 public:
+    sf::Texture appleSpawnTexture;
+    sf::Sprite appleSpawnSprite;
+    sf::Texture speedUpTexture;
+    sf::Sprite speedUpSprite;
+    sf::Texture appleTexture;
+
     void scaleSprite(sf::RenderWindow& window);
     sf::RectangleShape Overlay;
     sf::Texture backgroundTexture;
