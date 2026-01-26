@@ -67,6 +67,9 @@ Game::Game() :m_resources(m_globalfont), fightSprite(fightSpriteTexture) {
                              m_state = GameState::CONFIG;
                              return;
                         }
+                        if (m_resources.menuButtonEnd.isClicked(mousePos)) {
+                            std::exit(1);
+                        }
 
                     
                   
