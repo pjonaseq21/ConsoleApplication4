@@ -7,6 +7,7 @@
 #include "Ground.h"
 #include "gameSettings.h"
 #include <memory>
+
 enum class GameState {
     MENU,
     SIMULATION,
@@ -18,13 +19,17 @@ enum class GameState {
 
 class Game {
 public:
-    Game(); 
-    void run(); 
+    static constexpr float WIDTH = 1920.0f;
+    static constexpr float HEIGHT = 1080.0f;
+
+    Game();
+    void run();
 
 private:
     int countFamily_one = 0;
     int countFamily_two = 0;
     int winningFamily;
+    void spawnSingleThrongle(int familyId);
     sf::Clock clock;
     sf::Clock fightClock;
     void handleFight();
@@ -37,8 +42,8 @@ private:
     float totalSimTime = 0.0f;
     bool canFight = false;
     void processEvents();
-    void update(sf::Time dt);       
-    void render();   
+    void update(sf::Time dt);
+    void render();
     GameState m_state;
     Resources m_resources;
     sf::RenderWindow window;
@@ -53,5 +58,4 @@ private:
     void handleAppleEating();
     void handleDeadThrongles();
     void resetSimulation();
-
 };

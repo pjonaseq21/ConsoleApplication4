@@ -14,7 +14,11 @@ public:
     sf::Texture speedUpTexture;
     sf::Sprite speedUpSprite;
     sf::Texture appleTexture;
+    sf::Texture throngleSpawnTexture1;
+    sf::Sprite throngleSpawnSprite1;
 
+    sf::Texture throngleSpawnTexture2;
+    sf::Sprite throngleSpawnSprite2;
     void scaleSprite(sf::RenderWindow& window);
     sf::RectangleShape Overlay;
     sf::Texture backgroundTexture;

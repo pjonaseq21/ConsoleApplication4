@@ -5,19 +5,21 @@
 #include "Throngle.h"
 
 
-    Game::Game():m_resources(m_globalfont), fightSprite(fightSpriteTexture){
-        if (!m_globalfont.openFromFile("assets/ARIAL.ttf") || !fightSpriteTexture.loadFromFile("assets/miecze.png")) {
-            std::exit(1);
-        }
-        fightSprite.setTexture(fightSpriteTexture, true);
-        m_resources.menuButton.centerText();
-        //window.create(sf::VideoMode({2500,1200}), "Chmara", sf::State::Fullscreen);
-        window.create(sf::VideoMode::getDesktopMode(), "Chmara", sf::State::Fullscreen);
-        m_resources.scaleSprite(window);
-        window.setFramerateLimit(60);
-        m_state = GameState::MENU;
-        
+Game::Game() :m_resources(m_globalfont), fightSprite(fightSpriteTexture) {
+    if (!m_globalfont.openFromFile("assets/ARIAL.ttf") || !fightSpriteTexture.loadFromFile("assets/miecze.png")) {
+        std::exit(1);
     }
+    fightSprite.setTexture(fightSpriteTexture, true);
+    m_resources.menuButton.centerText();
+
+    window.create(sf::VideoMode::getDesktopMode(), "Chmara", sf::State::Fullscreen);
+
+    sf::View view(sf::FloatRect({ 0.f, 0.f, }, { Game::WIDTH, Game::HEIGHT }));
+    window.setView(view);
+
+    window.setFramerateLimit(60);
+    m_state = GameState::MENU;
+}
 
     void Game::run() {
          
@@ -28,7 +30,6 @@
             render();
         }
     }
-    //glowna funkcja
     void Game::processEvents() {
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
@@ -49,6 +50,15 @@
                             std::cout << "testowe klikniecie \n";
 
                         }
+
+                        else if (m_resources.throngleSpawnSprite1.getGlobalBounds().contains(mousePos)) {
+                            spawnSingleThrongle(0); // rodzina lewa
+                        }
+                        else if (m_resources.throngleSpawnSprite2.getGlobalBounds().contains(mousePos)) {
+                            spawnSingleThrongle(1); // rodzina prawa
+                        }
+
+
                     }
                     if (m_state == GameState::MENU) { //czy klikniecie znajduje sie w pozycji przycisku
                   
@@ -184,7 +194,8 @@
         }
         
         else if (m_state == GameState::SIMULATION || m_state == GameState::SIMULATION_MENU || m_state == GameState::SIMULATION_END) {
-          
+           
+
             window.draw(m_resources.backgroundSimulation);
             m_ground.render(window);
 
@@ -200,7 +211,8 @@
             if (fightSpriteBool == true) {
                 window.draw(fightSprite);
             }
-
+            window.draw(m_resources.throngleSpawnSprite1);
+            window.draw(m_resources.throngleSpawnSprite2);
             window.draw(m_resources.speedUpSprite);
             window.draw(m_resources.appleSpawnSprite);
 
@@ -335,47 +347,47 @@
         
         
     }
-    sf::FloatRect Game::setTerritory(int familyId)const
+    sf::FloatRect Game::setTerritory(int familyId) const
     {
         if (world_config.mode == gameMode::oneVillage)
         {
-            return { {0.f, 0.f}, {1600.f, 900.f} };
+            return { {0.f, 0.f}, {Game::WIDTH, Game::HEIGHT} };
         }
         else
         {
             if (familyId == 0)
-                return { {0.f, 0.f}, {800.f, 900.f} };
+                return { {0.f, 0.f}, {Game::WIDTH / 2.0f, Game::HEIGHT} };
             else
-                return { {800.f, 0.f}, {800.f, 900.f} };
+                return { {Game::WIDTH / 2.0f, 0.f}, {Game::WIDTH / 2.0f, Game::HEIGHT} };
         }
     }
     void Game::resetSimulation() {
         throngles.clear();
         apples.clear();
-        totalSimTime =0;
+        totalSimTime = 0;
         countFamily_one = 0;
         countFamily_two = 0;
         fastForward = false;
         canFight = false;
-        if (world_config.mode ==gameMode::twoVillages) {
-            m_ground.init(window.getSize().x, window.getSize().y, false);
+
+        if (world_config.mode == gameMode::twoVillages) {
+
+            m_ground.init((unsigned int)Game::WIDTH, (unsigned int)Game::HEIGHT, false);
 
             throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
             throngles.push_back(std::make_unique<Throngle>(1, setTerritory(1)));
             countFamily_one += 1;
             countFamily_two += 1;
-            apples.emplace_back(m_ground.returnFreeTile(),m_resources.appleTexture);
-            
+            apples.emplace_back(m_ground.returnFreeTile(), m_resources.appleTexture);
         }
         else {
             world_config.mode = gameMode::oneVillage;
-            m_ground.init(window.getSize().x, window.getSize().y, true);
+
+            m_ground.init((unsigned int)Game::WIDTH, (unsigned int)Game::HEIGHT, true);
+
             throngles.push_back(std::make_unique<Throngle>(0, setTerritory(0)));
-            apples.emplace_back(m_ground.returnFreeTile(),m_resources.appleTexture);
-
+            apples.emplace_back(m_ground.returnFreeTile(), m_resources.appleTexture);
         }
-
-
     }
 
     void Game::endGame(float totalSimTime) {
@@ -400,4 +412,17 @@
 
                 }
         }
+    }
+    void Game::spawnSingleThrongle(int familyId) {
+  
+        throngles.push_back(std::make_unique<Throngle>(
+            familyId,
+            setTerritory(familyId),
+            sf::Vector2f{ 64, 64 },
+            0.8f
+        ));
+
+        if (familyId == 0) countFamily_one++;
+        else countFamily_two++;
+
     }
