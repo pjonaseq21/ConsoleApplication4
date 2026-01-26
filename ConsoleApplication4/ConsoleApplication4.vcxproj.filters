@@ -62,6 +62,30 @@
     <Image Include="D:\sim_background.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\apple.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\sim_background2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\spawnAppleUi.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\spawnThrongle1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\spawnThrongle2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\speedupButton.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\unnamed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

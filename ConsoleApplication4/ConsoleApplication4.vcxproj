@@ -140,10 +140,18 @@
     <ClCompile Include="Throngle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\apple.png" />
     <Image Include="assets\background.jpg" />
+    <Image Include="assets\background.png" />
     <Image Include="assets\miecze.png" />
     <Image Include="assets\Simulation_background.jpg" />
+    <Image Include="assets\sim_background2.png" />
+    <Image Include="assets\spawnAppleUi.png" />
+    <Image Include="assets\spawnThrongle1.png" />
+    <Image Include="assets\spawnThrongle2.png" />
+    <Image Include="assets\speedupButton.png" />
     <Image Include="assets\throngleA.png" />
+    <Image Include="assets\unnamed.png" />
     <Image Include="D:\folderzplikamidoc++\background.jpg" />
     <Image Include="D:\miecze.png" />
     <Image Include="D:\sim_background.png" />
